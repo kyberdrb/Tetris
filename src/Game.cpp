@@ -137,15 +137,27 @@ void Game::startGame() {
 //                  || this->constructionSite->isActiveBrickOnFloorOrOnTopOfAnotherBrick() )
 //            )
 //        {
-        if (this->constructionSite->isActiveBrickActive()
-            && this->constructionSite->isActiveBrickOnFloorOrOnTopOfAnotherBrick() )
+//        if (this->constructionSite->isActiveBrickActive()
+//            && this->constructionSite->isActiveBrickOnFloorOrOnTopOfAnotherBrick() )
+
+        if (this->constructionSite->isActiveBrickOnFloorOrOnTopOfAnotherBrick() )
         {
             this->constructionSite->freezeActiveBrick();
             this->constructionSite->createNewActiveBrick();
             continue;
         }
 
-        this->constructionSite->moveActiveBrickDown();
+        if (this->keyboardInputCharacters == "d") {
+            this->constructionSite->moveActiveBrickDown();
+        }
+        if (this->keyboardInputCharacters == "l") {
+            this->constructionSite->moveActiveBrickLeft();
+        }
+//        if (this->keyboardInputCharacters == "r") {
+//            this->constructionSite->moveActiveBrickRight();
+//        }
+
+//        this->constructionSite->moveActiveBrickDown();
     }
 // WHILE LOOP - GAME LOOP - END
 }

@@ -156,14 +156,25 @@ uint_fast32_t ConstructionSite::bottomRowIndexOfUsablePlayingArea() const {
 
 void ConstructionSite::moveActiveBrickDown() {
     this->playingField
-            .at(this->activeBrick->getRow())
-            .at(this->activeBrick->getColumn())
-            .assign(BLANK);
+        .at(this->activeBrick->getRow())
+        .at(this->activeBrick->getColumn())
+        .assign(BLANK);
 
 //    bool isActiveBrickAboveFloor = !(this->isActiveBrickOnFloor() );
 //    if (isActiveBrickAboveFloor) {
         this->activeBrick->moveDown();
 //    }
+}
+
+void ConstructionSite::moveActiveBrickLeft() {
+    if (this->activeBrick->getColumn() > this->leftColumnIndexOfUsablePlayingArea() ) {
+        this->playingField
+            .at(this->activeBrick->getRow())
+            .at(this->activeBrick->getColumn())
+            .assign(BLANK);
+
+        this->activeBrick->moveLeft();
+    }
 }
 
 bool ConstructionSite::isActiveBrickActive() {
@@ -189,7 +200,7 @@ void ConstructionSite::createNewActiveBrick() {
     this->activeBrick = std::make_unique<Brick>();
 }
 
-uint_fast32_t ConstructionSite::leftColumnOfUsablePlayingArea() const {
+uint_fast32_t ConstructionSite::leftColumnIndexOfUsablePlayingArea() const {
     return 1;
 }
 
@@ -199,7 +210,7 @@ uint_fast32_t ConstructionSite::leftColumnOfUsablePlayingArea() const {
 //        .at(brick_1->getColumn())
 //        .assign(BLANK);  // clearBrickFromPreviousPosition()
 //
-//    if(this->brick_1->getColumn() > this->leftColumnOfUsablePlayingArea() ) {
+//    if(this->brick_1->getColumn() > this->leftColumnIndexOfUsablePlayingArea() ) {
 //        this->brick_1->moveLeft();
 //        this->brick_1->moveDown();
 //    }
