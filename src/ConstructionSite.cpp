@@ -22,7 +22,7 @@ ConstructionSite::ConstructionSite(uint_fast32_t rows, uint_fast32_t columns) :
     }
 
     //TODO encapsulate to function initializePlayingField()
-    uint_fast32_t forelastRowIndex = rows - 2;
+    uint_fast32_t forelastRowIndex = this->bottomRowIndexOfUsablePlayingArea();
     for (uint_fast32_t row = 0; row <= forelastRowIndex; ++row) {
         for (uint_fast32_t column = 0; column < columns; ++column) {
             // check first and forelast column - fill them with WALL character
@@ -90,7 +90,7 @@ std::string ConstructionSite::getCurrentPlayingField() {
 //        .at(brick_1->getColumn())
 //        .assign(brick_1->getBrickSign());
 //}
-
+//
 //void ConstructionSite::showBrick2OnPlayingField() {
 //    playingField
 //            .at(brick_2->getRow())
@@ -142,7 +142,7 @@ uint_fast32_t ConstructionSite::bottomRowIndexOfUsablePlayingArea() const {
 //        this->brick_1->moveDown();
 //    }
 //}
-
+//
 //void ConstructionSite::moveBrick2Down() {
 //    this->playingField
 //        .at(this->brick_2->getRow())
@@ -160,18 +160,24 @@ void ConstructionSite::moveActiveBrickDown() {
             .at(this->activeBrick->getColumn())
             .assign(BLANK);
 
-    bool isActiveBrickAboveFloor = !(isActiveBrickOnFloor() );
-    if (isActiveBrickAboveFloor) {
+//    bool isActiveBrickAboveFloor = !(this->isActiveBrickOnFloor() );
+//    if (isActiveBrickAboveFloor) {
         this->activeBrick->moveDown();
-    }
+//    }
 }
 
-bool ConstructionSite::isBrickActive() {
+bool ConstructionSite::isActiveBrickActive() {
     return this->activeBrick->isActive();
 }
 
-bool ConstructionSite::isActiveBrickOnFloor() {
-    return this->activeBrick->getRow() == this->bottomRowIndexOfUsablePlayingArea();
+//bool ConstructionSite::isActiveBrickOnFloor() {
+//    return this->activeBrick->getRow() == this->bottomRowIndexOfUsablePlayingArea();
+//}
+
+bool ConstructionSite::isActiveBrickOnFloorOrOnTopOfAnotherBrick() {
+    uint_fast32_t rowBelow = this->activeBrick->getRow() + 1;
+    std::string signInRowBelow = this->playingField.at(rowBelow).at(this->activeBrick->getColumn());
+    return signInRowBelow != BLANK;
 }
 
 void ConstructionSite::freezeActiveBrick() {
