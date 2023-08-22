@@ -153,9 +153,9 @@ void Game::startGame() {
         if (this->keyboardInputCharacters == "l") {
             this->constructionSite->moveActiveBrickLeft();
         }
-//        if (this->keyboardInputCharacters == "r") {
-//            this->constructionSite->moveActiveBrickRight();
-//        }
+        if (this->keyboardInputCharacters == "r") {
+            this->constructionSite->moveActiveBrickRight();
+        }
 
 //        this->constructionSite->moveActiveBrickDown();
     }

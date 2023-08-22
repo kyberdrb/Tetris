@@ -30,7 +30,7 @@ public:
     void moveBrick1Right();
     // ---
     void moveActiveBrickLeft();
-//    void moveActiveBrickRight();
+    void moveActiveBrickRight();
 
     // ---
     bool isActiveBrickActive();

@@ -177,6 +177,17 @@ void ConstructionSite::moveActiveBrickLeft() {
     }
 }
 
+void ConstructionSite::moveActiveBrickRight() {
+    if (this->activeBrick->getColumn() < this->rightColumnOfUsablePlayingArea() ) {
+        this->playingField
+                .at(this->activeBrick->getRow())
+                .at(this->activeBrick->getColumn())
+                .assign(BLANK);
+
+        this->activeBrick->moveRight();
+    }
+}
+
 bool ConstructionSite::isActiveBrickActive() {
     return this->activeBrick->isActive();
 }
