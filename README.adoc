@@ -6,6 +6,34 @@
     - CompositeBrick/Monomino (multiple Bricks together in various shapes)
 . Brick has fallen to the bottom OR Brick has fallen onto another Brick (two brick_1 are on top of each other) - this (active/moving/falling) brick_1 stops moving (deactivates/freezes) and next brick_1 is created, appears and starts falling
 
+== Commands for moving `Tetris` directory from one repo to a separate repo
+
+```
+for each commit related to Tetris directory
+do
+
+cp README.adoc /home/laptop/git/kyberdrb/Tetris
+cp CMakeLists.txt /home/laptop/git/kyberdrb/Tetris
+cp --recursive src/ /home/laptop/git/kyberdrb/Tetris/
+cp --recursive tests/ /home/laptop/git/kyberdrb/Tetris/
+git log | tac
+
+git checkout
+
+---
+
+git status && date
+
+date && git status && echo "" && git diff && date
+
+SPACE
+isBrickActive -> isActiveBrickActive
+
+git add --all
+git commit -m ""
+git push
+```
+
 == Sources
 
 - https://duckduckgo.com/?t=ffab&q=game+loop&iax=images&ia=images&iai=https%3A%2F%2Fcontent.byui.edu%2Ffile%2F2315e65e-a34a-48d3-814d-4175a2b74ed5%2F1%2Fcourse%2Fgameloop.png
