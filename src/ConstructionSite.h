@@ -34,7 +34,7 @@ public:
 
     // ---
     bool isActiveBrickActive();
-    bool isActiveBrickOnFloorOrOnTopOfAnotherBrick();
+    bool isActiveBrickAboveFloor();
 //    bool isAnyFrozenBrickOverreachingCeiling();
     void freezeActiveBrick();
     void createNewActiveBrick();

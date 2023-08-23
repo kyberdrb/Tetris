@@ -115,7 +115,7 @@ void Game::startGame() {
         this->loadInputFromTerminal();
 
 //          // more coherent: better overview of surrounding conditions BUT less intuitive, than when on the bottom: breaking chronology
-////        if (this->constructionSite->isActiveBrickOnFloor() || this->constructionSite->isActiveBrickOnFloorOrOnTopOfAnotherBrick() ) {
+////        if (this->constructionSite->isActiveBrickOnFloor() || this->constructionSite->isActiveBrickAboveFloor() ) {
 ////            this->constructionSite->freezeActiveBrick();
 ////            this->constructionSite->createNewActiveBrick();
 ////            continue;
@@ -128,24 +128,24 @@ void Game::startGame() {
         }
 
         // more intuitive because of chronology BUT less coherent: detached from the other check ''
-//        if (this->constructionSite->isActiveBrickOnFloor() || this->constructionSite->isActiveBrickOnFloorOrOnTopOfAnotherBrick() ) {
+//        if (this->constructionSite->isActiveBrickOnFloor() || this->constructionSite->isActiveBrickAboveFloor() ) {
 //        if (this->constructionSite->isActiveBrickOnFloor() ) {
 //        if (this->constructionSite->isActiveBrickActive() && this->constructionSite->isActiveBrickOnFloor() ) {
 //        if  (this->constructionSite->isActiveBrickActive()
 //                &&
 //                ( this->constructionSite->isActiveBrickOnFloor()
-//                  || this->constructionSite->isActiveBrickOnFloorOrOnTopOfAnotherBrick() )
+//                  || this->constructionSite->isActiveBrickAboveFloor() )
 //            )
 //        {
 //        if (this->constructionSite->isActiveBrickActive()
-//            && this->constructionSite->isActiveBrickOnFloorOrOnTopOfAnotherBrick() )
+//            && this->constructionSite->isActiveBrickAboveFloor() )
 
-        if (this->constructionSite->isActiveBrickOnFloorOrOnTopOfAnotherBrick() )
-        {
-            this->constructionSite->freezeActiveBrick();
-            this->constructionSite->createNewActiveBrick();
-            continue;
-        }
+//        if (this->constructionSite->isActiveBrickOnFloorOrOnTopOfAnotherBrick() )
+//        {
+//            this->constructionSite->freezeActiveBrick();
+//            this->constructionSite->createNewActiveBrick();
+//            continue;
+//        }
 
         if (this->keyboardInputCharacters == "d") {
             this->constructionSite->moveActiveBrickDown();
