@@ -43,6 +43,10 @@ void Brick::moveDown() {
     this->row += 1;
 }
 
+int_fast32_t Brick::lookLeft() {
+    return this->column - 1;
+}
+
 void Brick::moveLeft() {
     this->column -= 1;
 }

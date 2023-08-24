@@ -4,12 +4,6 @@
 #include <string>
 
 class Brick {
-private:
-    int_fast32_t row;
-    int_fast32_t column;
-    bool isBrickVisible;
-    bool isBrickActive;
-
 public:
     Brick();
 
@@ -25,6 +19,15 @@ public:
     void deactivate();
 
     void moveDown();
+
+    int_fast32_t lookLeft();
     void moveLeft();
+
     void moveRight();
+
+private:
+    int_fast32_t row;
+    int_fast32_t column;
+    bool isBrickVisible;
+    bool isBrickActive;
 };
