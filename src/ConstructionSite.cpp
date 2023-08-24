@@ -186,8 +186,12 @@ void ConstructionSite::moveActiveBrickLeft() {
 }
 
 void ConstructionSite::moveActiveBrickRight() {
-    // TODO fix moving through another (frozen) brick sideways
-    if (this->activeBrick->getColumn() < this->rightColumnOfUsablePlayingArea() ) {
+    bool hasDistanceFromRightWall = this->activeBrick->getColumn() < this->rightColumnOfUsablePlayingArea();
+    bool hasFreeSpaceOnRightSide = this->playingField
+            .at(this->activeBrick->getRow())
+            .at(this->activeBrick->lookRight()) == BLANK;
+
+    if (hasDistanceFromRightWall && hasFreeSpaceOnRightSide) {
         this->playingField
                 .at(this->activeBrick->getRow())
                 .at(this->activeBrick->getColumn())

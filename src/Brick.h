@@ -23,6 +23,7 @@ public:
     int_fast32_t lookLeft();
     void moveLeft();
 
+    int_fast32_t lookRight();
     void moveRight();
 
 private:

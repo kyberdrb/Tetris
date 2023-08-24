@@ -51,6 +51,10 @@ void Brick::moveLeft() {
     this->column -= 1;
 }
 
+int_fast32_t Brick::lookRight() {
+    return this->column + 1;
+}
+
 void Brick::moveRight() {
     this->column += 1;
 }
