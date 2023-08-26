@@ -39,6 +39,10 @@ void Brick::deactivate() {
     this->isBrickActive = false;
 }
 
+int_fast32_t Brick::lookBelow() {
+    return this->row + 1;
+}
+
 void Brick::moveDown() {
     this->row += 1;
 }

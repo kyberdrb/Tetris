@@ -155,7 +155,12 @@ uint_fast32_t ConstructionSite::bottomRowIndexOfUsablePlayingArea() const {
 //}
 
 void ConstructionSite::moveActiveBrickDown() {
-    if (this->isActiveBrickAboveFloor() ) {
+    bool hasFreeSpaceFromFloorOrOtherBricks = this->playingField
+            .at(this->activeBrick->getRow())
+            .at(this->activeBrick->lookBelow() ) == BLANK;
+
+//    if (this->isActiveBrickAboveFloor() ) {
+    if (hasFreeSpaceFromFloorOrOtherBricks) {
         this->playingField
             .at(this->activeBrick->getRow())
             .at(this->activeBrick->getColumn())
@@ -169,11 +174,21 @@ void ConstructionSite::moveActiveBrickDown() {
     this->createNewActiveBrick();
 }
 
+//bool ConstructionSite::isActiveBrickOnFloor() {
+//    return this->activeBrick->getRow() == this->bottomRowIndexOfUsablePlayingArea();
+//}
+
+bool ConstructionSite::isActiveBrickAboveFloor() {
+    uint_fast32_t rowBelow = this->activeBrick->getRow() + 1;
+    std::string signInRowBelow = this->playingField.at(rowBelow).at(this->activeBrick->getColumn());
+    return signInRowBelow == BLANK;
+}
+
 void ConstructionSite::moveActiveBrickLeft() {
     bool hasDistanceFromLeftWall = this->activeBrick->getColumn() > this->leftColumnIndexOfUsablePlayingArea();
     bool hasFreeSpaceOnLeftSide = this->playingField
             .at(this->activeBrick->getRow())
-            .at(this->activeBrick->lookLeft()) == BLANK;
+            .at(this->activeBrick->lookLeft() ) == BLANK;
 
     if (hasDistanceFromLeftWall && hasFreeSpaceOnLeftSide) {
         this->playingField
@@ -189,7 +204,7 @@ void ConstructionSite::moveActiveBrickRight() {
     bool hasDistanceFromRightWall = this->activeBrick->getColumn() < this->rightColumnOfUsablePlayingArea();
     bool hasFreeSpaceOnRightSide = this->playingField
             .at(this->activeBrick->getRow())
-            .at(this->activeBrick->lookRight()) == BLANK;
+            .at(this->activeBrick->lookRight() ) == BLANK;
 
     if (hasDistanceFromRightWall && hasFreeSpaceOnRightSide) {
         this->playingField
@@ -203,16 +218,6 @@ void ConstructionSite::moveActiveBrickRight() {
 
 bool ConstructionSite::isActiveBrickActive() {
     return this->activeBrick->isActive();
-}
-
-//bool ConstructionSite::isActiveBrickOnFloor() {
-//    return this->activeBrick->getRow() == this->bottomRowIndexOfUsablePlayingArea();
-//}
-
-bool ConstructionSite::isActiveBrickAboveFloor() {
-    uint_fast32_t rowBelow = this->activeBrick->getRow() + 1;
-    std::string signInRowBelow = this->playingField.at(rowBelow).at(this->activeBrick->getColumn());
-    return signInRowBelow == BLANK;
 }
 
 void ConstructionSite::freezeActiveBrick() {

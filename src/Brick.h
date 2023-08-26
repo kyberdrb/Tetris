@@ -18,6 +18,7 @@ public:
     bool isActive();
     void deactivate();
 
+    int_fast32_t lookBelow();
     void moveDown();
 
     int_fast32_t lookLeft();
