@@ -1,6 +1,5 @@
 #include "Game.h"
 
-#include <chrono>
 #include <thread>
 #include <iostream>
 
@@ -11,101 +10,6 @@ Game::Game() :
 {}
 
 void Game::startGame() {
-//    clearTerminal();
-
-    // TODO transform linear steps in Game into a for/while loop
-    //while (true) {
-        //loadInputFromTerminal();
-        //recalculateGameLogic();
-        //drawFrameOnTerminal();
-        //clearTerminal();
-    //}
-//
-//    drawFrameOnTerminal();
-//    loadInputFromTerminal();
-//    clearTerminal();
-
-    // TODO at first when integrating the steps into the while loop make the brick_1 visible before entering the loop to make implementation easier
-//    this->constructionSite->makeBrick1Visible();
-//    this->drawFrameOnTerminal();
-//    this->loadInputFromTerminal();
-//    this->clearTerminal();
-
-//    while (this->keyboardInputCharacters != "q") {
-//        if (this->keyboardInputCharacters == "d") {
-//            this->constructionSite->moveBrick1Down();
-//        }
-//        if (this->keyboardInputCharacters == "l") {
-//            this->constructionSite->moveBrick1Left();
-//        }
-//        if (this->keyboardInputCharacters == "r") {
-//            this->constructionSite->moveBrick1Right();
-//        }
-//
-//        this->drawFrameOnTerminal();
-//        this->loadInputFromTerminal();
-//        this->clearTerminal();
-//    }
-
-// ANOTHER TRY TO TRANSITION TO WHILE LOOP - BEGIN
-//    // INIT
-//    initGame();
-//
-//    // BRICK 1
-//    this->loadInputFromTerminal();
-//    this->constructionSite->makeBrick1Visible();
-//    this->clearTerminal();
-//    this->drawFrameOnTerminal();
-//
-//    this->loadInputFromTerminal();
-//    this->constructionSite->moveBrick1Down();
-//    this->clearTerminal();
-//    this->drawFrameOnTerminal();
-//
-//    this->loadInputFromTerminal();
-//    this->constructionSite->moveBrick1Down();
-//    this->clearTerminal();
-//    this->drawFrameOnTerminal();
-//
-//    this->loadInputFromTerminal();
-//    this->constructionSite->moveBrick1Down();
-//    this->clearTerminal();
-//    this->drawFrameOnTerminal();
-//
-//    // FREEZE/ACTIVATE-CONDITION 1: brick_1 falls on the floor
-//    // if brick_1 reaches the bottom of the usable playing field
-//        // deactivate/freeze the current brick_1
-//        // and make another brick_1
-//
-//    // BRICK 2
-//    this->loadInputFromTerminal();
-//    this->constructionSite->makeBrick2Visible();
-//    this->clearTerminal();
-//    this->drawFrameOnTerminal();
-//
-//    this->loadInputFromTerminal();
-//    this->constructionSite->moveBrick2Down();
-//    this->clearTerminal();
-//    this->drawFrameOnTerminal();
-//
-//    this->loadInputFromTerminal();
-//    this->constructionSite->moveBrick2Down();
-//    this->clearTerminal();
-//    this->drawFrameOnTerminal();
-//
-//    this->loadInputFromTerminal();
-//
-//    // FREEZE/ACTIVATE-CONDITION 2: two bricks are on top of each other
-//    // if brick_1 falls on another (deactivated?) brick_1
-//        // deactivate/freeze the current brick_1
-//        // and make another brick_1
-
-// ANOTHER TRY TO TRANSITION TO WHILE LOOP - END
-
-    // TODO join FREEZE/ACTIVATE-CONDITIONs into one if-statement, because the body/behavior is the same in both cases
-
-// WHILE LOOP - GAME LOOP - BEGIN
-//    initGame();
     while (this->keyboardInputCharacters != "q") {
         // GAME LOOP: DRAW / REDRAW
         this->clearTerminal();
@@ -114,59 +18,27 @@ void Game::startGame() {
         // GAME LOOP: LOAD INPUT
         this->loadInputFromTerminal();
 
-//          // more coherent: better overview of surrounding conditions BUT less intuitive, than when on the bottom: breaking chronology
-////        if (this->constructionSite->isActiveBrickOnFloor() || this->constructionSite->isActiveBrickAboveFloor() ) {
-////            this->constructionSite->freezeActiveBrick();
-////            this->constructionSite->createNewActiveBrick();
-////            continue;
-////        }
-
         // GAME LOOP: MODIFY GAME STATE / RECALCULATE GAME STATE
         if (this->constructionSite->isActiveBrickHidden() ) {
             this->constructionSite->makeActiveBrickVisible();
             continue;
         }
 
-        // more intuitive because of chronology BUT less coherent: detached from the other check ''
-//        if (this->constructionSite->isActiveBrickOnFloor() || this->constructionSite->isActiveBrickAboveFloor() ) {
-//        if (this->constructionSite->isActiveBrickOnFloor() ) {
-//        if (this->constructionSite->isActiveBrickActive() && this->constructionSite->isActiveBrickOnFloor() ) {
-//        if  (this->constructionSite->isActiveBrickActive()
-//                &&
-//                ( this->constructionSite->isActiveBrickOnFloor()
-//                  || this->constructionSite->isActiveBrickAboveFloor() )
-//            )
-//        {
-//        if (this->constructionSite->isActiveBrickActive()
-//            && this->constructionSite->isActiveBrickAboveFloor() )
-
-//        if (this->constructionSite->isActiveBrickOnFloorOrOnTopOfAnotherBrick() )
-//        {
-//            this->constructionSite->freezeActiveBrick();
-//            this->constructionSite->createNewActiveBrick();
-//            continue;
-//        }
-
         if (this->keyboardInputCharacters == "d") {
             this->constructionSite->moveActiveBrickDown();
+//            continue;
         }
         if (this->keyboardInputCharacters == "l") {
             this->constructionSite->moveActiveBrickLeft();
+//            continue;
         }
         if (this->keyboardInputCharacters == "r") {
             this->constructionSite->moveActiveBrickRight();
+//            continue;
         }
-
-//        this->constructionSite->moveActiveBrickDown();
     }
 // WHILE LOOP - GAME LOOP - END
 }
-
-//void Game::initGame() {
-//    clearTerminal();
-//    drawFrameOnTerminal();
-////    loadInputFromTerminal();
-//}
 
 void Game::loadInputFromTerminal() {
     std::cout << "enter command(s): ";
