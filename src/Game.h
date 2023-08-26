@@ -18,6 +18,4 @@ private:
     void recalculateGameLogic();
     void clearTerminal();
     void drawFrameOnTerminal() const;
-
-    void initGame();
 };

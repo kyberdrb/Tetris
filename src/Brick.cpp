@@ -31,15 +31,11 @@ void Brick::makeVisible() {
     this->isBrickVisible = true;
 }
 
-bool Brick::isActive() {
-    return this->isBrickActive;
-}
-
 void Brick::deactivate() {
     this->isBrickActive = false;
 }
 
-int_fast32_t Brick::lookBelow() {
+int_fast32_t Brick::lookBelow() const {
     return this->row + 1;
 }
 
@@ -47,7 +43,7 @@ void Brick::moveDown() {
     this->row += 1;
 }
 
-int_fast32_t Brick::lookLeft() {
+int_fast32_t Brick::lookLeft() const {
     return this->column - 1;
 }
 
@@ -55,7 +51,7 @@ void Brick::moveLeft() {
     this->column -= 1;
 }
 
-int_fast32_t Brick::lookRight() {
+int_fast32_t Brick::lookRight() const {
     return this->column + 1;
 }
 

@@ -15,16 +15,15 @@ public:
     bool isVisible() const;
     void makeVisible();
 
-    bool isActive();
     void deactivate();
 
-    int_fast32_t lookBelow();
+    int_fast32_t lookBelow() const;
     void moveDown();
 
-    int_fast32_t lookLeft();
+    int_fast32_t lookLeft() const;
     void moveLeft();
 
-    int_fast32_t lookRight();
+    int_fast32_t lookRight() const;
     void moveRight();
 
 private:
