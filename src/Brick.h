@@ -30,5 +30,4 @@ private:
     int_fast32_t row;
     int_fast32_t column;
     bool isBrickVisible;
-//    bool isBrickActive;
 };

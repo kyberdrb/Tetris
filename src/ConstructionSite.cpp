@@ -92,7 +92,7 @@ void ConstructionSite::showFrozenBrickOnPlayingField(const Brick& brick) {
 }
 
 bool ConstructionSite::isActiveBrickHidden() {
-    return !(this->activeBrick->isVisible());
+    return !(this->activeBrick->isVisible() );
 }
 
 void ConstructionSite::makeActiveBrickVisible() {
@@ -105,13 +105,13 @@ uint_fast32_t ConstructionSite::bottomRowIndexOfUsablePlayingArea() const {
 
 void ConstructionSite::moveActiveBrickDown() {
     bool hasFreeSpaceFromFloorOrOtherBricks = this->playingField
-            .at(this->activeBrick->lookBelow())
+            .at(this->activeBrick->lookBelow() )
             .at(this->activeBrick->getColumn() ) == BLANK;
 
     if (hasFreeSpaceFromFloorOrOtherBricks) {
         this->playingField
-            .at(this->activeBrick->getRow())
-            .at(this->activeBrick->getColumn())
+            .at(this->activeBrick->getRow() )
+            .at(this->activeBrick->getColumn() )
             .assign(BLANK);
 
         this->activeBrick->moveDown();
@@ -124,8 +124,7 @@ void ConstructionSite::moveActiveBrickDown() {
 }
 
 void ConstructionSite::freezeActiveBrick() {
-//    this->activeBrick->deactivate();
-    this->frozenBricks.emplace_back(std::move(this->activeBrick));
+    this->frozenBricks.emplace_back(std::move(this->activeBrick) );
 }
 
 void ConstructionSite::createNewActiveBrick() {
