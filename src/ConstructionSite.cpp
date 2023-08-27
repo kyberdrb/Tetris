@@ -1,6 +1,7 @@
 #include "Brick.h"
 #include "ConstructionSite.h"
 
+#include <algorithm>
 #include <iostream>
 #include <memory>
 #include <sstream>
@@ -118,7 +119,51 @@ void ConstructionSite::moveActiveBrickDown() {
     }
 
     this->freezeActiveBrick();
+    this->removeLastLine();
     this->createNewActiveBrick();
+}
+
+void ConstructionSite::freezeActiveBrick() {
+//    this->activeBrick->deactivate();
+    this->frozenBricks.emplace_back(std::move(this->activeBrick));
+}
+
+void ConstructionSite::createNewActiveBrick() {
+    this->activeBrick = std::make_unique<Brick>();
+}
+
+//bool ConstructionSite::removeLastLine() {
+void ConstructionSite::removeLastLine() {
+    for (int column = this->leftColumnIndexOfUsablePlayingArea(); column <= this->rightColumnIndexOfUsablePlayingArea(); ++column) {
+        if (this->playingField.at(this->bottomRowIndexOfUsablePlayingArea() ).at(column) == BLANK) {
+            return;
+        }
+    }
+
+    // delete frozen bricks in the last row from frozen bricks and from the playingField
+    this->frozenBricks.erase(
+        std::remove_if(this->frozenBricks.begin(), this->frozenBricks.end(),
+            [&](const auto & frozenBrick) {
+                if (frozenBrick->getRow() == this->bottomRowIndexOfUsablePlayingArea() ) {
+                    this->playingField
+                        .at(frozenBrick->getRow())
+                        .at(frozenBrick->getColumn())
+                        .assign(BLANK);
+                }
+
+                return frozenBrick->getRow() == this->bottomRowIndexOfUsablePlayingArea();
+            }),
+        this->frozenBricks.end() );
+
+    // move all remaining frozen brick one level down
+    for (const auto& frozenBrick : this->frozenBricks) {
+        this->playingField
+            .at(frozenBrick->getRow())
+            .at(frozenBrick->getColumn())
+            .assign(BLANK);
+
+        frozenBrick->moveDown();
+    }
 }
 
 void ConstructionSite::moveActiveBrickLeft() {
@@ -138,7 +183,7 @@ void ConstructionSite::moveActiveBrickLeft() {
 }
 
 void ConstructionSite::moveActiveBrickRight() {
-    bool hasDistanceFromRightWall = this->activeBrick->getColumn() < this->rightColumnOfUsablePlayingArea();
+    bool hasDistanceFromRightWall = this->activeBrick->getColumn() < this->rightColumnIndexOfUsablePlayingArea();
     bool hasFreeSpaceOnRightSide = this->playingField
             .at(this->activeBrick->getRow())
             .at(this->activeBrick->lookRight() ) == BLANK;
@@ -153,19 +198,10 @@ void ConstructionSite::moveActiveBrickRight() {
     }
 }
 
-void ConstructionSite::freezeActiveBrick() {
-    this->activeBrick->deactivate();
-}
-
-void ConstructionSite::createNewActiveBrick() {
-    this->frozenBricks.emplace_back(std::move(this->activeBrick));
-    this->activeBrick = std::make_unique<Brick>();
-}
-
 uint_fast32_t ConstructionSite::leftColumnIndexOfUsablePlayingArea() const {
     return 1;
 }
 
-uint_fast32_t ConstructionSite::rightColumnOfUsablePlayingArea() const {
+uint_fast32_t ConstructionSite::rightColumnIndexOfUsablePlayingArea() const {
     return this->columns - 2;
 }

@@ -15,7 +15,7 @@ public:
     bool isVisible() const;
     void makeVisible();
 
-    void deactivate();
+//    void deactivate();
 
     int_fast32_t lookBelow() const;
     void moveDown();
@@ -30,5 +30,5 @@ private:
     int_fast32_t row;
     int_fast32_t column;
     bool isBrickVisible;
-    bool isBrickActive;
+//    bool isBrickActive;
 };

@@ -42,10 +42,9 @@ private:
     void showActiveBrickOnPlayingField();
     void showFrozenBrickOnPlayingField(const Brick& brick);
 
-    // ---
-//    bool isActiveBrickOnFloor();
-
     uint_fast32_t bottomRowIndexOfUsablePlayingArea() const;
     uint_fast32_t leftColumnIndexOfUsablePlayingArea() const;
-    uint_fast32_t rightColumnOfUsablePlayingArea() const;
+    uint_fast32_t rightColumnIndexOfUsablePlayingArea() const;
+
+    void removeLastLine();
 };

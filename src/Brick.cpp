@@ -3,8 +3,9 @@
 Brick::Brick() :
     row(0),
     column(2),
-    isBrickVisible(false),
-    isBrickActive(true)
+    isBrickVisible(false)
+//    ,
+//    isBrickActive(true)
 {}
 
 int_fast32_t Brick::getRow() const {
@@ -31,9 +32,9 @@ void Brick::makeVisible() {
     this->isBrickVisible = true;
 }
 
-void Brick::deactivate() {
-    this->isBrickActive = false;
-}
+//void Brick::deactivate() {
+//    this->isBrickActive = false;
+//}
 
 int_fast32_t Brick::lookBelow() const {
     return this->row + 1;

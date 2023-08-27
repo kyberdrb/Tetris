@@ -30,11 +30,33 @@ SPACE
 isBrickActive -> isActiveBrickActive
 
 git add --all
-git commit -m ""
+git commit -m "some commit message"
 git push
 ```
 
+* https://duckduckgo.com/?q=git+show+origin&t=ffab&ia=web
+* https://duckduckgo.com/?t=ffab&q=git+unfetch&ia=web&iax=qa
+* https://duckduckgo.com/?t=ffab&q=git+head+is+detached+at&ia=web&iax=qa
+
 == Sources
 
-- https://duckduckgo.com/?t=ffab&q=game+loop&iax=images&ia=images&iai=https%3A%2F%2Fcontent.byui.edu%2Ffile%2F2315e65e-a34a-48d3-814d-4175a2b74ed5%2F1%2Fcourse%2Fgameloop.png
-- https://content.byui.edu/file/2315e65e-a34a-48d3-814d-4175a2b74ed5/1/intro/165-gameloop.html
+* Game Loop
+    ** https://duckduckgo.com/?t=ffab&q=gaming+loop&ia=web
+    ** https://duckduckgo.com/?t=ffab&q=game+loop&iax=images&ia=images&iai=https%3A%2F%2Fcontent.byui.edu%2Ffile%2F2315e65e-a34a-48d3-814d-4175a2b74ed5%2F1%2Fcourse%2Fgameloop.png
+    ** https://content.byui.edu/file/2315e65e-a34a-48d3-814d-4175a2b74ed5/1/intro/165-gameloop.html
+    ** https://duckduckgo.com/?t=ffab&q=game+vs+real+time+system&ia=web&iax=qa
+    ** https://stackoverflow.com/questions/2715708/can-games-be-considered-real-time-systems
+
+* Erase element in `std::vector`
+    ** https://duckduckgo.com/?t=ffab&q=c%2B%2B+vector+erase+element+at+index&ia=web
+    ** https://stackoverflow.com/questions/875103/how-do-i-erase-an-element-from-stdvector-by-index
+    ** https://duckduckgo.com/?t=ffab&q=c%2B%2B+vector+for+each+erase&ia=web
+    ** https://stackoverflow.com/questions/3938838/erasing-from-a-stdvector-while-doing-a-for-each
+    ** https://duckduckgo.com/?t=ffab&q=c%2B%2B+vector+iterator+for+loop&ia=web
+    ** https://stackoverflow.com/questions/12702561/iterate-through-a-c-vector-using-a-for-loop
+    ** https://duckduckgo.com/?t=ffab&q=c%2B%2B+vector+iterator+for+loop+erase&ia=web
+    ** https://stackoverflow.com/questions/4645705/vector-erase-iterator
+    ** https://duckduckgo.com/?t=ffab&q=c%2B%2B+remove_if&ia=web
+    ** https://en.cppreference.com/w/cpp/algorithm/remove
+    ** https://duckduckgo.com/?t=ffab&q=c%2B%2B+vector+remove_if+example&ia=web
+    ** https://stackoverflow.com/questions/7958216/c-remove-if-on-a-vector-of-objects

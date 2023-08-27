@@ -10,6 +10,7 @@ Game::Game() :
 {}
 
 void Game::startGame() {
+    // WHILE LOOP - GAME LOOP - BEGIN
     while (this->keyboardInputCharacters != "q") {
         // GAME LOOP: DRAW / REDRAW
         this->clearTerminal();
@@ -18,32 +19,33 @@ void Game::startGame() {
         // GAME LOOP: LOAD INPUT
         this->loadInputFromTerminal();
 
-        // GAME LOOP: MODIFY GAME STATE / RECALCULATE GAME STATE
+        // GAME LOOP: MODIFY GAME STATE / RECALCULATE GAME STATE...
+        //   ...by internal state
         if (this->constructionSite->isActiveBrickHidden() ) {
             this->constructionSite->makeActiveBrickVisible();
             continue;
         }
 
+        //   ...by external input
         if (this->keyboardInputCharacters == "d") {
             this->constructionSite->moveActiveBrickDown();
-//            continue;
+            continue;
         }
         if (this->keyboardInputCharacters == "l") {
             this->constructionSite->moveActiveBrickLeft();
-//            continue;
+            continue;
         }
         if (this->keyboardInputCharacters == "r") {
             this->constructionSite->moveActiveBrickRight();
-//            continue;
+            continue;
         }
     }
-// WHILE LOOP - GAME LOOP - END
+    // WHILE LOOP - GAME LOOP - END
 }
 
 void Game::loadInputFromTerminal() {
     std::cout << "enter command(s): ";
     std::cin >> this->keyboardInputCharacters;
-    // TODO process input
 };
 
 void Game::recalculateGameLogic() {
