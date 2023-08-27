@@ -131,7 +131,6 @@ void ConstructionSite::createNewActiveBrick() {
     this->activeBrick = std::make_unique<Brick>();
 }
 
-//bool ConstructionSite::removeLastLine() {
 void ConstructionSite::removeLastLine() {
     for (int column = this->leftColumnIndexOfUsablePlayingArea(); column <= this->rightColumnIndexOfUsablePlayingArea(); ++column) {
         if (this->playingField.at(this->bottomRowIndexOfUsablePlayingArea() ).at(column) == BLANK) {
