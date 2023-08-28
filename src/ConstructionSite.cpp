@@ -91,6 +91,15 @@ void ConstructionSite::showFrozenBrickOnPlayingField(const Brick& brick) {
         .assign(brick.getBrickSign() );
 }
 
+bool ConstructionSite::isBrickSpawningSpotPopulatedWithFrozenBrick() {
+    for (const auto & frozenBrick : frozenBricks) {
+        if (this->activeBrick->getRow() == frozenBrick->getRow() && this->activeBrick->getColumn() == frozenBrick->getColumn() ) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool ConstructionSite::isActiveBrickHidden() {
     return !(this->activeBrick->isVisible() );
 }
@@ -119,7 +128,7 @@ void ConstructionSite::moveActiveBrickDown() {
     }
 
     this->freezeActiveBrick();
-    this->removeLastLine();
+    this->removeLastLineWhenFull();
     this->createNewActiveBrick();
 }
 
@@ -131,7 +140,7 @@ void ConstructionSite::createNewActiveBrick() {
     this->activeBrick = std::make_unique<Brick>();
 }
 
-void ConstructionSite::removeLastLine() {
+void ConstructionSite::removeLastLineWhenFull() {
     for (int column = this->leftColumnIndexOfUsablePlayingArea(); column <= this->rightColumnIndexOfUsablePlayingArea(); ++column) {
         if (this->playingField.at(this->bottomRowIndexOfUsablePlayingArea() ).at(column) == BLANK) {
             return;

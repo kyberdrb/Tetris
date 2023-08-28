@@ -21,6 +21,10 @@ void Game::startGame() {
 
         // GAME LOOP: MODIFY GAME STATE / RECALCULATE GAME STATE...
         //   ...by internal state
+        if (this->constructionSite->isBrickSpawningSpotPopulatedWithFrozenBrick() ) {
+            break;
+        }
+
         if (this->constructionSite->isActiveBrickHidden() ) {
             this->constructionSite->makeActiveBrickVisible();
             continue;

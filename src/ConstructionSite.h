@@ -15,6 +15,8 @@ public:
 
     std::string getCurrentPlayingField();
 
+    bool isBrickSpawningSpotPopulatedWithFrozenBrick();
+
     bool isActiveBrickHidden();
     void makeActiveBrickVisible();
 
@@ -46,5 +48,5 @@ private:
     uint_fast32_t leftColumnIndexOfUsablePlayingArea() const;
     uint_fast32_t rightColumnIndexOfUsablePlayingArea() const;
 
-    void removeLastLine();
+    void removeLastLineWhenFull();
 };
