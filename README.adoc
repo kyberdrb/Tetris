@@ -2,9 +2,51 @@
 
 . ConstructionSite (stavenisko - hracia plocha)
 . BuildingBlock
-    - Brick (one part of a Monomino - tehlička)
+    - `Polyomino` (abstract class/interface - `Component`)
+        - `Brick`/Monomino (single brick - tehlička - polyomino consisting of a *single brick*)
+        - `Domino` - two bricks glued together by their sides
+
+            Types: Straight only
+
+            ```
+            #
+            #
+            ```
+
+        - `Tromino` - three bricks glued together by their sides
+
+            Types: Straight and `L`
+
+            ```
+            #    #
+            #    ##
+            #
+            ```
+
+        - `Tetromino` - four bricks glued together by their sides
+
+            Types: Straight, Square, `L`, `T`, `S`/skew
+
+            ```
+            Straight
+                        ####
+            Square
+                        ##
+                        ##
+            L
+                        #
+                        #
+                        ##
+            T
+                        ###
+                         #
+            S/skew
+                        ##
+                       ##
+            ```
+
     - CompositeBrick/Monomino (multiple Bricks together in various shapes)
-. Brick has fallen to the bottom OR Brick has fallen onto another Brick (two brick_1 are on top of each other) - this (active/moving/falling) brick_1 stops moving (deactivates/freezes) and next brick_1 is created, appears and starts falling
+. Brick has fallen to the bottom OR Brick has fallen onto another Brick (two bricks are on top of each other) - the (active/moving/falling) brick stops moving (deactivates/freezes) and next brick is created, appears and starts falling
 
 == Commands for moving `Tetris` directory from one repo to a separate repo
 
@@ -39,6 +81,9 @@ git push
 * https://duckduckgo.com/?t=ffab&q=git+head+is+detached+at&ia=web&iax=qa
 
 == Sources
+
+* Tetris general
+    ** https://en.wikipedia.org/wiki/Tetris
 
 * Game Loop
     ** https://duckduckgo.com/?t=ffab&q=gaming+loop&ia=web
