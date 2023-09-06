@@ -21,26 +21,26 @@ void Game::startGame() {
 
         // GAME LOOP: MODIFY GAME STATE / RECALCULATE GAME STATE...
         //   ...by internal state
-        if (this->constructionSite->isBrickSpawningSpotPopulatedWithFrozenBrick() ) {
+        if (this->constructionSite->isMonominoSpawningSpotPopulatedWithFrozenMonomino() ) {
             break;
         }
 
-        if (this->constructionSite->isActiveBrickHidden() ) {
-            this->constructionSite->makeActiveBrickVisible();
+        if (this->constructionSite->isActiveMonominoHidden() ) {
+            this->constructionSite->makeActiveMonominoVisible();
             continue;
         }
 
         //   ...by external input
         if (this->keyboardInputCharacters == "d") {
-            this->constructionSite->moveActiveBrickDown();
+            this->constructionSite->moveActiveMonominoDown();
             continue;
         }
         if (this->keyboardInputCharacters == "l") {
-            this->constructionSite->moveActiveBrickLeft();
+            this->constructionSite->moveActiveMonominoLeft();
             continue;
         }
         if (this->keyboardInputCharacters == "r") {
-            this->constructionSite->moveActiveBrickRight();
+            this->constructionSite->moveActiveMonominoRight();
             continue;
         }
     }

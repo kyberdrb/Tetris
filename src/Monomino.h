@@ -3,14 +3,14 @@
 #include <cstdint>
 #include <string>
 
-class Brick {
+class Monomino {
 public:
-    Brick();
+    Monomino();
 
     int_fast32_t getRow() const;
     int_fast32_t getColumn() const;
 
-    std::string getBrickSign() const;
+    std::string getMonominoSign() const;
 
     bool isVisible() const;
     void makeVisible();
@@ -29,5 +29,5 @@ public:
 private:
     int_fast32_t row;
     int_fast32_t column;
-    bool isBrickVisible;
+    bool isMonominoVisible;
 };

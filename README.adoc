@@ -1,52 +1,69 @@
 = Tetris
 
 . ConstructionSite (stavenisko - hracia plocha)
-. BuildingBlock
-    - `Polyomino` (abstract class/interface - `Component`)
-        - `Brick`/Monomino (single brick - tehlička - polyomino consisting of a *single brick*)
-        - `Domino` - two bricks glued together by their sides
+. BuildingBlock/`Polyomino`
+    * multiple Bricks/Monominos together in various shapes
+    * abstract class/interface - `Component`
+    * `Brick`/`Monomino`
+        ** single brick - tehlička - polyomino consisting of a *single brick*; the Leaf class in Composite design pattern)
 
-            Types: Straight only
+    * `Domino`
+        ** Polyomino type of order 2
+        ** Composite specialization - two bricks glued together by their sides
+        ** Types:
+            *** Straight only
 
-            ```
-            #
-            #
-            ```
+                #
+                #
 
-        - `Tromino` - three bricks glued together by their sides
+    * `Tromino`
+        ** Polyomino type of order 3
+        ** Composite specialization - three bricks glued together by their sides
+        ** Types:
+            *** Straight
 
-            Types: Straight and `L`
+                #
+                #
+                #
 
-            ```
-            #    #
-            #    ##
-            #
-            ```
+            *** `L`
 
-        - `Tetromino` - four bricks glued together by their sides
+                #
+                ##
 
-            Types: Straight, Square, `L`, `T`, `S`/skew
 
-            ```
-            Straight
-                        ####
-            Square
-                        ##
-                        ##
-            L
-                        #
-                        #
-                        ##
-            T
-                        ###
-                         #
-            S/skew
-                        ##
-                       ##
-            ```
+    * `Tetromino`
+        ** Polyomino type of order 3
+        ** Composite specialization - three bricks glued together by their sides
+        ** Types:
+            *** Straight
 
-    - CompositeBrick/Monomino (multiple Bricks together in various shapes)
-. Brick has fallen to the bottom OR Brick has fallen onto another Brick (two bricks are on top of each other) - the (active/moving/falling) brick stops moving (deactivates/freezes) and next brick is created, appears and starts falling
+                ####
+
+            *** Square
+
+                ##
+                ##
+
+            *** `L`
+
+                #
+                #
+                ##
+
+            *** `T`
+
+                ###
+                 #
+
+            *** `S` / skew
+
+                 ##
+                ##
+
+. Monomino has fallen to the bottom OR Monomino has fallen onto another Monomino (two bricks/monominos are on top of each other) - the (active/moving/falling) brick stops moving (deactivates/freezes) and next brick is created, appears and starts falling
+
+* Every Polyomino will have the ability to `rotate` itself (clockwise?), `flip horizontally` - horizontal symmetry, `flip vertically` - vertical symmetry
 
 == Commands for moving `Tetris` directory from one repo to a separate repo
 

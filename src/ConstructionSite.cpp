@@ -1,4 +1,4 @@
-#include "Brick.h"
+#include "Monomino.h"
 #include "ConstructionSite.h"
 
 #include <algorithm>
@@ -11,8 +11,8 @@
 ConstructionSite::ConstructionSite(uint_fast32_t rows, uint_fast32_t columns) :
         rows(rows),
         columns(columns),
-        // TODO calculate middle Y-coordinate (horizontal center) for Brick + adjust constructor for that matter for Brick class
-        activeBrick(std::make_unique<Brick>() )
+        // TODO calculate middle Y-coordinate (horizontal center) for Monomino + adjust constructor for that matter for Monomino class
+        activeMonomino(std::make_unique<Monomino>() )
 {
     // TODO adjustPlaygroundDimensions() - check if at least one brick_1 fits in the playground: rows is greater or equal than 3; columns are greater or equal than 3
 
@@ -57,13 +57,13 @@ uint_fast32_t ConstructionSite::getNumberOfColumns() const {
 }
 
 std::string ConstructionSite::getCurrentPlayingField() {
-    if (this->activeBrick->isVisible()) {
-        this->showActiveBrickOnPlayingField();
+    if (this->activeMonomino->isVisible()) {
+        this->showActiveMonominoOnPlayingField();
     }
 
-    for (const auto& frozenBrick : this->frozenBricks ) {
-        if (frozenBrick->isVisible() ) {
-            showFrozenBrickOnPlayingField(*frozenBrick);
+    for (const auto& frozenMonomino : this->frozenMonominos ) {
+        if (frozenMonomino->isVisible() ) {
+            showFrozenMonominoOnPlayingField(*frozenMonomino);
         }
     }
 
@@ -77,67 +77,67 @@ std::string ConstructionSite::getCurrentPlayingField() {
     return buffer.str();
 }
 
-void ConstructionSite::showActiveBrickOnPlayingField() {
+void ConstructionSite::showActiveMonominoOnPlayingField() {
     this->playingField
-            .at(this->activeBrick->getRow())
-            .at(this->activeBrick->getColumn())
-            .assign(this->activeBrick->getBrickSign());
+            .at(this->activeMonomino->getRow())
+            .at(this->activeMonomino->getColumn())
+            .assign(this->activeMonomino->getMonominoSign());
 }
 
-void ConstructionSite::showFrozenBrickOnPlayingField(const Brick& brick) {
+void ConstructionSite::showFrozenMonominoOnPlayingField(const Monomino& brick) {
     this->playingField
         .at(brick.getRow() )
         .at(brick.getColumn() )
-        .assign(brick.getBrickSign() );
+        .assign(brick.getMonominoSign() );
 }
 
-bool ConstructionSite::isBrickSpawningSpotPopulatedWithFrozenBrick() {
-    for (const auto & frozenBrick : frozenBricks) {
-        if (this->activeBrick->getRow() == frozenBrick->getRow() && this->activeBrick->getColumn() == frozenBrick->getColumn() ) {
+bool ConstructionSite::isMonominoSpawningSpotPopulatedWithFrozenMonomino() {
+    for (const auto & frozenMonomino : frozenMonominos) {
+        if (this->activeMonomino->getRow() == frozenMonomino->getRow() && this->activeMonomino->getColumn() == frozenMonomino->getColumn() ) {
             return true;
         }
     }
     return false;
 }
 
-bool ConstructionSite::isActiveBrickHidden() {
-    return !(this->activeBrick->isVisible() );
+bool ConstructionSite::isActiveMonominoHidden() {
+    return !(this->activeMonomino->isVisible() );
 }
 
-void ConstructionSite::makeActiveBrickVisible() {
-    this->activeBrick->makeVisible();
+void ConstructionSite::makeActiveMonominoVisible() {
+    this->activeMonomino->makeVisible();
 }
 
 uint_fast32_t ConstructionSite::bottomRowIndexOfUsablePlayingArea() const {
     return this->rows - 2;
 }
 
-void ConstructionSite::moveActiveBrickDown() {
-    bool hasFreeSpaceFromFloorOrOtherBricks = this->playingField
-            .at(this->activeBrick->lookBelow() )
-            .at(this->activeBrick->getColumn() ) == BLANK;
+void ConstructionSite::moveActiveMonominoDown() {
+    bool hasFreeSpaceFromFloorOrOtherMonominos = this->playingField
+            .at(this->activeMonomino->lookBelow() )
+            .at(this->activeMonomino->getColumn() ) == BLANK;
 
-    if (hasFreeSpaceFromFloorOrOtherBricks) {
+    if (hasFreeSpaceFromFloorOrOtherMonominos) {
         this->playingField
-            .at(this->activeBrick->getRow() )
-            .at(this->activeBrick->getColumn() )
+            .at(this->activeMonomino->getRow() )
+            .at(this->activeMonomino->getColumn() )
             .assign(BLANK);
 
-        this->activeBrick->moveDown();
+        this->activeMonomino->moveDown();
         return;
     }
 
-    this->freezeActiveBrick();
+    this->freezeActiveMonomino();
     this->removeLastLineWhenFull();
-    this->createNewActiveBrick();
+    this->createNewActiveMonomino();
 }
 
-void ConstructionSite::freezeActiveBrick() {
-    this->frozenBricks.emplace_back(std::move(this->activeBrick) );
+void ConstructionSite::freezeActiveMonomino() {
+    this->frozenMonominos.emplace_back(std::move(this->activeMonomino) );
 }
 
-void ConstructionSite::createNewActiveBrick() {
-    this->activeBrick = std::make_unique<Brick>();
+void ConstructionSite::createNewActiveMonomino() {
+    this->activeMonomino = std::make_unique<Monomino>();
 }
 
 void ConstructionSite::removeLastLineWhenFull() {
@@ -148,60 +148,60 @@ void ConstructionSite::removeLastLineWhenFull() {
     }
 
     // delete frozen bricks in the last row from frozen bricks and from the playingField
-    this->frozenBricks.erase(
-        std::remove_if(this->frozenBricks.begin(), this->frozenBricks.end(),
-            [&](const auto & frozenBrick) {
-                if (frozenBrick->getRow() == this->bottomRowIndexOfUsablePlayingArea() ) {
+    this->frozenMonominos.erase(
+        std::remove_if(this->frozenMonominos.begin(), this->frozenMonominos.end(),
+            [&](const auto & frozenMonomino) {
+                if (frozenMonomino->getRow() == this->bottomRowIndexOfUsablePlayingArea() ) {
                     this->playingField
-                        .at(frozenBrick->getRow())
-                        .at(frozenBrick->getColumn())
+                        .at(frozenMonomino->getRow())
+                        .at(frozenMonomino->getColumn())
                         .assign(BLANK);
                 }
 
-                return frozenBrick->getRow() == this->bottomRowIndexOfUsablePlayingArea();
+                return frozenMonomino->getRow() == this->bottomRowIndexOfUsablePlayingArea();
             }),
-        this->frozenBricks.end() );
+        this->frozenMonominos.end() );
 
     // move all remaining frozen brick one level down
-    for (const auto& frozenBrick : this->frozenBricks) {
+    for (const auto& frozenMonomino : this->frozenMonominos) {
         this->playingField
-            .at(frozenBrick->getRow())
-            .at(frozenBrick->getColumn())
+            .at(frozenMonomino->getRow())
+            .at(frozenMonomino->getColumn())
             .assign(BLANK);
 
-        frozenBrick->moveDown();
+        frozenMonomino->moveDown();
     }
 }
 
-void ConstructionSite::moveActiveBrickLeft() {
-    bool hasDistanceFromLeftWall = this->activeBrick->getColumn() > this->leftColumnIndexOfUsablePlayingArea();
+void ConstructionSite::moveActiveMonominoLeft() {
+    bool hasDistanceFromLeftWall = this->activeMonomino->getColumn() > this->leftColumnIndexOfUsablePlayingArea();
     bool hasFreeSpaceOnLeftSide = this->playingField
-            .at(this->activeBrick->getRow())
-            .at(this->activeBrick->lookLeft() ) == BLANK;
+            .at(this->activeMonomino->getRow())
+            .at(this->activeMonomino->lookLeft() ) == BLANK;
 
     if (hasDistanceFromLeftWall && hasFreeSpaceOnLeftSide) {
         this->playingField
-            .at(this->activeBrick->getRow())
-            .at(this->activeBrick->getColumn())
+            .at(this->activeMonomino->getRow())
+            .at(this->activeMonomino->getColumn())
             .assign(BLANK);
 
-        this->activeBrick->moveLeft();
+        this->activeMonomino->moveLeft();
     }
 }
 
-void ConstructionSite::moveActiveBrickRight() {
-    bool hasDistanceFromRightWall = this->activeBrick->getColumn() < this->rightColumnIndexOfUsablePlayingArea();
+void ConstructionSite::moveActiveMonominoRight() {
+    bool hasDistanceFromRightWall = this->activeMonomino->getColumn() < this->rightColumnIndexOfUsablePlayingArea();
     bool hasFreeSpaceOnRightSide = this->playingField
-            .at(this->activeBrick->getRow())
-            .at(this->activeBrick->lookRight() ) == BLANK;
+            .at(this->activeMonomino->getRow())
+            .at(this->activeMonomino->lookRight() ) == BLANK;
 
     if (hasDistanceFromRightWall && hasFreeSpaceOnRightSide) {
         this->playingField
-                .at(this->activeBrick->getRow())
-                .at(this->activeBrick->getColumn())
+                .at(this->activeMonomino->getRow())
+                .at(this->activeMonomino->getColumn())
                 .assign(BLANK);
 
-        this->activeBrick->moveRight();
+        this->activeMonomino->moveRight();
     }
 }
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Brick.h"
+#include "Monomino.h"
 
 #include <memory>
 #include <string>
@@ -15,25 +15,25 @@ public:
 
     std::string getCurrentPlayingField();
 
-    bool isBrickSpawningSpotPopulatedWithFrozenBrick();
+    bool isMonominoSpawningSpotPopulatedWithFrozenMonomino();
 
-    bool isActiveBrickHidden();
-    void makeActiveBrickVisible();
+    bool isActiveMonominoHidden();
+    void makeActiveMonominoVisible();
 
-    void moveActiveBrickDown();
+    void moveActiveMonominoDown();
 
-    void moveActiveBrickLeft();
-    void moveActiveBrickRight();
+    void moveActiveMonominoLeft();
+    void moveActiveMonominoRight();
 
-    void freezeActiveBrick();
-    void createNewActiveBrick();
+    void freezeActiveMonomino();
+    void createNewActiveMonomino();
 
 private:
     uint_fast32_t rows;
     uint_fast32_t columns;
 
-    std::unique_ptr<Brick> activeBrick;
-    std::vector<std::unique_ptr<Brick>> frozenBricks;
+    std::unique_ptr<Monomino> activeMonomino;
+    std::vector<std::unique_ptr<Monomino>> frozenMonominos;
 
     std::vector<std::vector<std::string>> playingField;
 
@@ -41,8 +41,8 @@ private:
     const std::string WALL = "|"; // PIPE
     const std::string BLANK = " "; // SPACE
 
-    void showActiveBrickOnPlayingField();
-    void showFrozenBrickOnPlayingField(const Brick& brick);
+    void showActiveMonominoOnPlayingField();
+    void showFrozenMonominoOnPlayingField(const Monomino& brick);
 
     uint_fast32_t bottomRowIndexOfUsablePlayingArea() const;
     uint_fast32_t leftColumnIndexOfUsablePlayingArea() const;
