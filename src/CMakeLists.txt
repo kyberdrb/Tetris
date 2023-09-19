@@ -1,4 +1,4 @@
-add_executable(Tetris)
+add_executable(Tetris Domino.cpp Domino.h)
 target_sources(
     Tetris
 
