@@ -4,6 +4,13 @@
 
 #include "Domino.h"
 
+Domino::Domino() :
+    firstMonomino(std::make_unique<Monomino>()),
+    secondMonomino(std::make_unique<Monomino>())
+{
+    this->secondMonomino->moveRight();
+}
+
 int_fast32_t Domino::getRow() const {
     return this->firstMonomino->getRow();
 }
