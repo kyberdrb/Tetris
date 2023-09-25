@@ -21,26 +21,46 @@ void Game::startGame() {
 
         // GAME LOOP: MODIFY GAME STATE / RECALCULATE GAME STATE...
         //   ...by internal state
-        if (this->constructionSite->isMonominoSpawningSpotPopulatedWithFrozenMonomino() ) {
+//        if (this->constructionSite->isMonominoSpawningSpotPopulatedWithFrozenMonomino() ) {
+//            break;
+//        }
+        if (this->constructionSite->isDominoSpawningSpotPopulatedWithFrozenDomino() ) {
             break;
         }
 
-        if (this->constructionSite->isActiveMonominoHidden() ) {
-            this->constructionSite->makeActiveMonominoVisible();
+
+//        if (this->constructionSite->isActiveMonominoHidden() ) {
+//            this->constructionSite->makeActiveMonominoVisible();
+//            continue;
+//        }
+        if (this->constructionSite->isActiveDominoHidden() ) {
+            this->constructionSite->makeActiveDominoVisible();
             continue;
         }
 
         //   ...by external input
+//        if (this->keyboardInputCharacters == "d") {
+//            this->constructionSite->moveActiveMonominoDown();
+//            continue;
+//        }
         if (this->keyboardInputCharacters == "d") {
-            this->constructionSite->moveActiveMonominoDown();
+            this->constructionSite->moveActiveDominoDown();
             continue;
         }
+//        if (this->keyboardInputCharacters == "l") {
+//            this->constructionSite->moveActiveMonominoLeft();
+//            continue;
+//        }
         if (this->keyboardInputCharacters == "l") {
-            this->constructionSite->moveActiveMonominoLeft();
+            this->constructionSite->moveActiveDominoLeft();
             continue;
         }
+//        if (this->keyboardInputCharacters == "r") {
+//            this->constructionSite->moveActiveMonominoRight();
+//            continue;
+//        }
         if (this->keyboardInputCharacters == "r") {
-            this->constructionSite->moveActiveMonominoRight();
+            this->constructionSite->moveActiveDominoRight();
             continue;
         }
     }

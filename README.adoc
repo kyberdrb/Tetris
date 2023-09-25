@@ -16,7 +16,7 @@
                 #
                 #
 
-                ###
+                ##
 
     * `Tromino`
         ** Polyomino type of order 3
