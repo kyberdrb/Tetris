@@ -14,14 +14,6 @@ int_fast32_t Monomino::getColumn() const {
     return this->column;
 }
 
-std::string Monomino::getMonominoSign() const {
-    return "#";
-//    return "■"; // '■' - BLACK SQUARE - u9632
-//    return "⎕"; // '⎕ - Apl Functional Symbol Quad'
-//    return "□";  // '□ - White Square'
-//    return "⌷";  // '⌷ - Apl Functional Symbol Squish Quad'
-}
-
 bool Monomino::isVisible() const {
     return this->isMonominoVisible;
 }

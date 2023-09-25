@@ -10,8 +10,6 @@ public:
     int_fast32_t getRow() const;
     int_fast32_t getColumn() const;
 
-    std::string getMonominoSign() const;
-
     bool isVisible() const;
     void makeVisible();
 

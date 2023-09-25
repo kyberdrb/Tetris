@@ -6,14 +6,24 @@
 #include <memory>
 #include <sstream>
 
+const std::string FLOOR = "`"; // BACKTICK
+const std::string WALL = "|"; // PIPE
+const std::string BLANK = " "; // SPACE
+
+const std::string BRICK = "#";  // HASHTAG/POUNDSIGN
+                                // '■' - BLACK SQUARE - u9632
+                                // '⎕ - Apl Functional Symbol Quad'
+                                // '□ - White Square'
+                                // '⌷ - Apl Functional Symbol Squish Quad'
+
 // TODO parametrize with args, i.e. "argv" and with constructor, and maybe add a setter to dynamically resize the playground during the game
 // TODO manually enlarge the playingField in order to test multiple descends and/or input commands - preparation for testing in a while loop
 ConstructionSite::ConstructionSite(uint_fast32_t rows, uint_fast32_t columns) :
         rows(rows),
         columns(columns),
         // TODO calculate middle Y-coordinate (horizontal center) for Monomino + adjust constructor for that matter for Monomino class
-//        activeMonomino(std::make_unique<Monomino>() )
-        activeDomino(std::make_unique<Domino>() )
+        activeMonomino(std::make_unique<Monomino>() )
+//        activeDomino(std::make_unique<Domino>() )
 {
     // TODO adjustPlaygroundDimensions()
     //  - check if at least one brick_1 fits in the playground: rows is greater or equal than 3; columns are greater or equal than 3
@@ -59,25 +69,23 @@ uint_fast32_t ConstructionSite::getNumberOfColumns() const {
 }
 
 std::string ConstructionSite::getCurrentPlayingField() {
-//    if (this->activeMonomino->isVisible()) {
-//        this->showActiveMonominoOnPlayingField();
-//    }
-
-    if (this->activeDomino->isVisible()) {
-        this->showActiveDominoOnPlayingField();
+    if (this->activeMonomino->isVisible()) {
+        this->showActiveMonominoOnPlayingField();
     }
-
-//    for (const auto& frozenMonomino : this->frozenMonominos ) {
-//        if (frozenMonomino->isVisible() ) {
-//            showFrozenMonominoOnPlayingField(*frozenMonomino);
-//        }
+//    if (this->activeDomino->isVisible()) {
+//        this->showActiveDominoOnPlayingField();
 //    }
 
-    for (const auto& frozenDomino : this->frozenDominos ) {
-        if (frozenDomino->isVisible() ) {
-            showFrozenDominoOnPlayingField(*frozenDomino);
+    for (const auto& frozenMonomino : this->frozenMonominos ) {
+        if (frozenMonomino->isVisible() ) {
+            showFrozenMonominoOnPlayingField(*frozenMonomino);
         }
     }
+//    for (const auto& frozenDomino : this->frozenDominos ) {
+//        if (frozenDomino->isVisible() ) {
+//            showFrozenDominoOnPlayingField(*frozenDomino);
+//        }
+//    }
 
     std::stringstream buffer;
     for (const auto& row : playingField) {
@@ -89,184 +97,184 @@ std::string ConstructionSite::getCurrentPlayingField() {
     return buffer.str();
 }
 
-//void ConstructionSite::showActiveMonominoOnPlayingField() {
-//    this->playingField
-//            .at(this->activeMonomino->getRow())
-//            .at(this->activeMonomino->getColumn())
-//            .assign(this->activeMonomino->getMonominoSign());
-//}
-
-void ConstructionSite::showActiveDominoOnPlayingField() {
-
+void ConstructionSite::showActiveMonominoOnPlayingField() {
+    this->playingField
+            .at(this->activeMonomino->getRow())
+            .at(this->activeMonomino->getColumn())
+            .assign(BRICK);
 }
 
-//void ConstructionSite::showFrozenMonominoOnPlayingField(const Monomino& brick) {
-//    this->playingField
-//        .at(brick.getRow() )
-//        .at(brick.getColumn() )
-//        .assign(brick.getMonominoSign() );
+//void ConstructionSite::showActiveDominoOnPlayingField() {
+//
 //}
 
-void ConstructionSite::showFrozenDominoOnPlayingField(const Domino& brick) {
-
+void ConstructionSite::showFrozenMonominoOnPlayingField(const Monomino& brick) {
+    this->playingField
+        .at(brick.getRow() )
+        .at(brick.getColumn() )
+        .assign(BRICK);
 }
 
-//bool ConstructionSite::isMonominoSpawningSpotPopulatedWithFrozenMonomino() {
-//    for (const auto & frozenMonomino : frozenMonominos) {
-//        if (this->activeMonomino->getRow() == frozenMonomino->getRow() && this->activeMonomino->getColumn() == frozenMonomino->getColumn() ) {
+//void ConstructionSite::showFrozenDominoOnPlayingField(const Domino& brick) {
+//
+//}
+
+bool ConstructionSite::isMonominoSpawningSpotPopulatedWithFrozenMonomino() {
+    for (const auto & frozenMonomino : frozenMonominos) {
+        if (this->activeMonomino->getRow() == frozenMonomino->getRow() && this->activeMonomino->getColumn() == frozenMonomino->getColumn() ) {
+            return true;
+        }
+    }
+    return false;
+}
+
+//bool ConstructionSite::isDominoSpawningSpotPopulatedWithFrozenDomino() {
+//    for (const auto& frozenDomino : frozenDominos) {
+//        if (this->activeDomino->getRow() == frozenDomino->getRow() && this->activeDomino->getColumn() == frozenDomino->getColumn() ) {
 //            return true;
 //        }
 //    }
 //    return false;
 //}
 
-bool ConstructionSite::isDominoSpawningSpotPopulatedWithFrozenDomino() {
-//    for (const auto& frozenDomino : frozenDominos) {
-//        if (this->activeDomino->getRow() == frozenDomino->getRow() && this->activeDomino->getColumn() == frozenDomino->getColumn() ) {
-//            return true;
-//        }
-//    }
-    return false;
+bool ConstructionSite::isActiveMonominoHidden() {
+    return !(this->activeMonomino->isVisible() );
 }
 
-//bool ConstructionSite::isActiveMonominoHidden() {
-//    return !(this->activeMonomino->isVisible() );
+//bool ConstructionSite::isActiveDominoHidden() {
+//    return !(this->activeDomino->isVisible() );
 //}
 
-bool ConstructionSite::isActiveDominoHidden() {
-    return !(this->activeDomino->isVisible() );
+void ConstructionSite::makeActiveMonominoVisible() {
+    this->activeMonomino->makeVisible();
 }
 
-//void ConstructionSite::makeActiveMonominoVisible() {
-//    this->activeMonomino->makeVisible();
+//void ConstructionSite::makeActiveDominoVisible() {
+//    this->activeDomino->makeVisible();
 //}
-
-void ConstructionSite::makeActiveDominoVisible() {
-    this->activeDomino->makeVisible();
-}
 
 uint_fast32_t ConstructionSite::bottomRowIndexOfUsablePlayingArea() const {
     return this->rows - 2;
 }
 
-//void ConstructionSite::moveActiveMonominoDown() {
-//    bool hasFreeSpaceFromFloorOrOtherMonominos = this->playingField
-//            .at(this->activeMonomino->lookBelow() )
-//            .at(this->activeMonomino->getColumn() ) == BLANK;
-//
-//    if (hasFreeSpaceFromFloorOrOtherMonominos) {
-//        this->playingField
-//            .at(this->activeMonomino->getRow() )
-//            .at(this->activeMonomino->getColumn() )
-//            .assign(BLANK);
-//
-//        this->activeMonomino->moveDown();
-//        return;
-//    }
-//
-//    this->freezeActiveMonomino();
-//    this->removeLastLineWhenFull();
-//    this->createNewActiveMonomino();
-//}
+void ConstructionSite::moveActiveMonominoDown() {
+    bool hasFreeSpaceFromFloorOrOtherMonominos = this->playingField
+            .at(this->activeMonomino->lookBelow() )
+            .at(this->activeMonomino->getColumn() ) == BLANK;
 
-void ConstructionSite::moveActiveDominoDown() {
+    if (hasFreeSpaceFromFloorOrOtherMonominos) {
+        this->playingField
+            .at(this->activeMonomino->getRow() )
+            .at(this->activeMonomino->getColumn() )
+            .assign(BLANK);
 
+        this->activeMonomino->moveDown();
+        return;
+    }
+
+    this->freezeActiveMonomino();
+    this->removeLastLineWhenFull();
+    this->createNewActiveMonomino();
 }
 
-//void ConstructionSite::freezeActiveMonomino() {
-//    this->frozenMonominos.emplace_back(std::move(this->activeMonomino) );
+//void ConstructionSite::moveActiveDominoDown() {
+//
 //}
 
-void ConstructionSite::freezeActiveDomino() {
-    this->frozenDominos.emplace_back(std::move(this->activeDomino) );
+void ConstructionSite::freezeActiveMonomino() {
+    this->frozenMonominos.emplace_back(std::move(this->activeMonomino) );
 }
 
-//void ConstructionSite::createNewActiveMonomino() {
-//    this->activeMonomino = std::make_unique<Monomino>();
+//void ConstructionSite::freezeActiveDomino() {
+//    this->frozenDominos.emplace_back(std::move(this->activeDomino) );
 //}
 
-void ConstructionSite::createNewActiveDomino() {
-    this->activeDomino = std::make_unique<Domino>();
+void ConstructionSite::createNewActiveMonomino() {
+    this->activeMonomino = std::make_unique<Monomino>();
 }
+
+//void ConstructionSite::createNewActiveDomino() {
+//    this->activeDomino = std::make_unique<Domino>();
+//}
 
 // for Monominos
-//void ConstructionSite::removeLastLineWhenFull() {
-//    for (int column = this->leftColumnIndexOfUsablePlayingArea(); column <= this->rightColumnIndexOfUsablePlayingArea(); ++column) {
-//        if (this->playingField.at(this->bottomRowIndexOfUsablePlayingArea() ).at(column) == BLANK) {
-//            return;
-//        }
-//    }
-//
-//    // delete frozen bricks in the last row from frozen bricks and from the playingField
-//    this->frozenMonominos.erase(
-//        std::remove_if(this->frozenMonominos.begin(), this->frozenMonominos.end(),
-//            [&](const auto & frozenMonomino) {
-//                if (frozenMonomino->getRow() == this->bottomRowIndexOfUsablePlayingArea() ) {
-//                    this->playingField
-//                        .at(frozenMonomino->getRow())
-//                        .at(frozenMonomino->getColumn())
-//                        .assign(BLANK);
-//                }
-//
-//                return frozenMonomino->getRow() == this->bottomRowIndexOfUsablePlayingArea();
-//            }),
-//        this->frozenMonominos.end() );
-//
-//    // move all remaining frozen brick one level down
-//    for (const auto& frozenMonomino : this->frozenMonominos) {
-//        this->playingField
-//            .at(frozenMonomino->getRow())
-//            .at(frozenMonomino->getColumn())
-//            .assign(BLANK);
-//
-//        frozenMonomino->moveDown();
-//    }
-//}
-
-// for Domino
 void ConstructionSite::removeLastLineWhenFull() {
+    for (int column = this->leftColumnIndexOfUsablePlayingArea(); column <= this->rightColumnIndexOfUsablePlayingArea(); ++column) {
+        if (this->playingField.at(this->bottomRowIndexOfUsablePlayingArea() ).at(column) == BLANK) {
+            return;
+        }
+    }
 
+    // delete frozen bricks in the last row from frozen bricks and from the playingField
+    this->frozenMonominos.erase(
+        std::remove_if(this->frozenMonominos.begin(), this->frozenMonominos.end(),
+            [&](const auto & frozenMonomino) {
+                if (frozenMonomino->getRow() == this->bottomRowIndexOfUsablePlayingArea() ) {
+                    this->playingField
+                        .at(frozenMonomino->getRow())
+                        .at(frozenMonomino->getColumn())
+                        .assign(BLANK);
+                }
+
+                return frozenMonomino->getRow() == this->bottomRowIndexOfUsablePlayingArea();
+            }),
+        this->frozenMonominos.end() );
+
+    // move all remaining frozen brick one level down
+    for (const auto& frozenMonomino : this->frozenMonominos) {
+        this->playingField
+            .at(frozenMonomino->getRow())
+            .at(frozenMonomino->getColumn())
+            .assign(BLANK);
+
+        frozenMonomino->moveDown();
+    }
 }
 
-//void ConstructionSite::moveActiveMonominoLeft() {
-//    bool hasDistanceFromLeftWall = this->activeMonomino->getColumn() > this->leftColumnIndexOfUsablePlayingArea();
-//    bool hasFreeSpaceOnLeftSide = this->playingField
-//            .at(this->activeMonomino->getRow())
-//            .at(this->activeMonomino->lookLeft() ) == BLANK;
+// for Dominos
+//void ConstructionSite::removeLastLineWhenFull() {
 //
-//    if (hasDistanceFromLeftWall && hasFreeSpaceOnLeftSide) {
-//        this->playingField
-//            .at(this->activeMonomino->getRow())
-//            .at(this->activeMonomino->getColumn())
-//            .assign(BLANK);
-//
-//        this->activeMonomino->moveLeft();
-//    }
 //}
 
-void ConstructionSite::moveActiveDominoLeft() {
+void ConstructionSite::moveActiveMonominoLeft() {
+    bool hasDistanceFromLeftWall = this->activeMonomino->getColumn() > this->leftColumnIndexOfUsablePlayingArea();
+    bool hasFreeSpaceOnLeftSide = this->playingField
+            .at(this->activeMonomino->getRow())
+            .at(this->activeMonomino->lookLeft() ) == BLANK;
 
+    if (hasDistanceFromLeftWall && hasFreeSpaceOnLeftSide) {
+        this->playingField
+            .at(this->activeMonomino->getRow())
+            .at(this->activeMonomino->getColumn())
+            .assign(BLANK);
+
+        this->activeMonomino->moveLeft();
+    }
 }
 
-//void ConstructionSite::moveActiveMonominoRight() {
-//    bool hasDistanceFromRightWall = this->activeMonomino->getColumn() < this->rightColumnIndexOfUsablePlayingArea();
-//    bool hasFreeSpaceOnRightSide = this->playingField
-//            .at(this->activeMonomino->getRow())
-//            .at(this->activeMonomino->lookRight() ) == BLANK;
+//void ConstructionSite::moveActiveDominoLeft() {
 //
-//    if (hasDistanceFromRightWall && hasFreeSpaceOnRightSide) {
-//        this->playingField
-//                .at(this->activeMonomino->getRow())
-//                .at(this->activeMonomino->getColumn())
-//                .assign(BLANK);
-//
-//        this->activeMonomino->moveRight();
-//    }
 //}
 
-void ConstructionSite::moveActiveDominoRight() {
+void ConstructionSite::moveActiveMonominoRight() {
+    bool hasDistanceFromRightWall = this->activeMonomino->getColumn() < this->rightColumnIndexOfUsablePlayingArea();
+    bool hasFreeSpaceOnRightSide = this->playingField
+            .at(this->activeMonomino->getRow())
+            .at(this->activeMonomino->lookRight() ) == BLANK;
 
+    if (hasDistanceFromRightWall && hasFreeSpaceOnRightSide) {
+        this->playingField
+                .at(this->activeMonomino->getRow())
+                .at(this->activeMonomino->getColumn())
+                .assign(BLANK);
+
+        this->activeMonomino->moveRight();
+    }
 }
+
+//void ConstructionSite::moveActiveDominoRight() {
+//
+//}
 
 uint_fast32_t ConstructionSite::leftColumnIndexOfUsablePlayingArea() const {
     return 1;

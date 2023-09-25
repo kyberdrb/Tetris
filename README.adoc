@@ -35,6 +35,15 @@
                 #
                 ##
 
+                ##
+                #
+
+                ##
+                 #
+
+                 #
+                ##
+
 
     * `Tetromino`
         ** Polyomino type of order 4
@@ -60,15 +69,42 @@
                 #
                 ##
 
+                ###
+                #
+
+                ##
+                 #
+                 #
+
+
+                  #
+                ###
+
             *** `T`
 
                 ###
                  #
 
+                 #
+                ##
+                 #
+
+                 #
+                ###
+
+                 #
+                 ##
+                 #
+
+
             *** `S` / skew
 
                  ##
                 ##
+
+                 #
+                 ##
+                  #
 
 . Monomino has fallen to the bottom OR Monomino has fallen onto another Monomino (two bricks/monominos are on top of each other) - the (active/moving/falling) brick stops moving (deactivates/freezes) and next brick is created, appears and starts falling
 
