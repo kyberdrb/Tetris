@@ -16,6 +16,8 @@
                 #
                 #
 
+                ###
+
     * `Tromino`
         ** Polyomino type of order 3
         ** Composite specialization - three bricks glued together by their sides
@@ -25,6 +27,8 @@
                 #
                 #
                 #
+
+                ###
 
             *** `L`
 
@@ -37,6 +41,11 @@
         ** Composite specialization - four bricks glued together by their sides
         ** Types:
             *** Straight
+
+                #
+                #
+                #
+                #
 
                 ####
 

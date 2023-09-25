@@ -1,16 +1,19 @@
+//
+// Created by laptop on 9/19/23.
+//
+
 #pragma once
 
-#include <cstdint>
-#include <string>
+#include "Monomino.h"
 
-class Monomino {
+#include <memory>
+
+class Domino {
 public:
-    Monomino();
+    Domino();
 
     int_fast32_t getRow() const;
     int_fast32_t getColumn() const;
-
-    std::string getMonominoSign() const;
 
     bool isVisible() const;
     void makeVisible();
@@ -25,7 +28,6 @@ public:
     void moveRight();
 
 private:
-    int_fast32_t row;
-    int_fast32_t column;
-    bool isMonominoVisible;
+    std::unique_ptr<Monomino> firstMonomino;
+    std::unique_ptr<Monomino> secondMonomino;
 };

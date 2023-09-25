@@ -60,7 +60,7 @@ void Game::recalculateGameLogic() {
     // if brick_1 is visible
         // put it down
         // return / switch to other state?
-    // if brick_1 is deactivated
+    // if brick_1 is fallen
         // create a new brick_1/building block
         // return / switch to other state?
     // if there are consecutive lines in the ConstructionSite's playingField
