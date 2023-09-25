@@ -1,10 +1,10 @@
 = Tetris
 
 . ConstructionSite (stavenisko - hracia plocha)
-. BuildingBlock/`Polyomino`
+. BuildingBlock / `Polyomino`
     * multiple Bricks/Monominos together in various shapes
     * abstract class/interface - `Component`
-    * `Brick`/`Monomino`
+    * `Brick` / `Monomino`
         ** single brick - tehlička - polyomino consisting of a *single brick*; the Leaf class in Composite design pattern)
 
     * `Domino`
@@ -33,8 +33,8 @@
 
 
     * `Tetromino`
-        ** Polyomino type of order 3
-        ** Composite specialization - three bricks glued together by their sides
+        ** Polyomino type of order 4
+        ** Composite specialization - four bricks glued together by their sides
         ** Types:
             *** Straight
 
