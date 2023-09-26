@@ -9,81 +9,81 @@ Game::Game() :
     constructionSite(std::make_unique<ConstructionSite>(5, 6))
 {}
 
-void Game::startGameForMonominos() {
-    // WHILE LOOP - GAME LOOP - BEGIN
-    while (this->keyboardInputCharacters != "q") {
-        // GAME LOOP: DRAW / REDRAW
-        this->clearTerminal();
-        this->drawFrameOnTerminal();
-
-        // GAME LOOP: LOAD INPUT
-        this->loadInputFromTerminal();
-
-        // GAME LOOP: MODIFY GAME STATE / RECALCULATE GAME STATE...
-        //   ...by internal state
-        if (this->constructionSite->isMonominoSpawningSpotPopulatedWithFrozenMonomino() ) {
-            break;
-        }
-
-        if (this->constructionSite->isActiveMonominoHidden() ) {
-            this->constructionSite->makeActiveMonominoVisible();
-            continue;
-        }
-
-        //   ...by external input
-        if (this->keyboardInputCharacters == "d") {
-            this->constructionSite->moveActiveMonominoDown();
-            continue;
-        }
-        if (this->keyboardInputCharacters == "l") {
-            this->constructionSite->moveActiveMonominoLeft();
-            continue;
-        }
-        if (this->keyboardInputCharacters == "r") {
-            this->constructionSite->moveActiveMonominoRight();
-            continue;
-        }
-    }
-    // WHILE LOOP - GAME LOOP - END
-}
-
-//void Game::startGameForDominos() {
+//void Game::startGameForMonominos() {
 //    // WHILE LOOP - GAME LOOP - BEGIN
 //    while (this->keyboardInputCharacters != "q") {
 //        // GAME LOOP: DRAW / REDRAW
 //        this->clearTerminal();
-//        this->drawFrameOnTerminal();
+//        this->drawFrameOnTerminalForMonominos();
 //
 //        // GAME LOOP: LOAD INPUT
 //        this->loadInputFromTerminal();
 //
 //        // GAME LOOP: MODIFY GAME STATE / RECALCULATE GAME STATE...
 //        //   ...by internal state
-//        if (this->constructionSite->isDominoSpawningSpotPopulatedWithFrozenDomino() ) {
+//        if (this->constructionSite->isMonominoSpawningSpotPopulatedWithFrozenMonomino() ) {
 //            break;
 //        }
 //
-//        if (this->constructionSite->isActiveDominoHidden() ) {
-//            this->constructionSite->makeActiveDominoVisible();
+//        if (this->constructionSite->isActiveMonominoHidden() ) {
+//            this->constructionSite->makeActiveMonominoVisible();
 //            continue;
 //        }
 //
 //        //   ...by external input
 //        if (this->keyboardInputCharacters == "d") {
-//            this->constructionSite->moveActiveDominoDown();
+//            this->constructionSite->moveActiveMonominoDown();
 //            continue;
 //        }
 //        if (this->keyboardInputCharacters == "l") {
-//            this->constructionSite->moveActiveDominoLeft();
+//            this->constructionSite->moveActiveMonominoLeft();
 //            continue;
 //        }
 //        if (this->keyboardInputCharacters == "r") {
-//            this->constructionSite->moveActiveDominoRight();
+//            this->constructionSite->moveActiveMonominoRight();
 //            continue;
 //        }
 //    }
 //    // WHILE LOOP - GAME LOOP - END
 //}
+
+void Game::startGameForDominos() {
+    // WHILE LOOP - GAME LOOP - BEGIN
+    while (this->keyboardInputCharacters != "q") {
+        // GAME LOOP: DRAW / REDRAW
+        this->clearTerminal();
+        this->drawFrameOnTerminalForDominos();
+
+        // GAME LOOP: LOAD INPUT
+        this->loadInputFromTerminal();
+
+        // GAME LOOP: MODIFY GAME STATE / RECALCULATE GAME STATE...
+        //   ...by internal state
+        if (this->constructionSite->isDominoSpawningSpotPopulatedWithFrozenDomino() ) {
+            break;
+        }
+
+        if (this->constructionSite->isActiveDominoHidden() ) {
+            this->constructionSite->makeActiveDominoVisible();
+            continue;
+        }
+
+        //   ...by external input
+        if (this->keyboardInputCharacters == "d") {
+            this->constructionSite->moveActiveDominoDown();
+            continue;
+        }
+        if (this->keyboardInputCharacters == "l") {
+            this->constructionSite->moveActiveDominoLeft();
+            continue;
+        }
+        if (this->keyboardInputCharacters == "r") {
+            this->constructionSite->moveActiveDominoRight();
+            continue;
+        }
+    }
+    // WHILE LOOP - GAME LOOP - END
+}
 
 void Game::loadInputFromTerminal() {
     std::cout << "enter command(s): ";
@@ -107,8 +107,12 @@ void Game::recalculateGameLogic() {
         // return / switch to other state?
 }
 
-void Game::drawFrameOnTerminal() const {
-    std::cout << constructionSite->getCurrentPlayingFieldOfMonominos() << std::flush;
+//void Game::drawFrameOnTerminalForMonominos() const {
+//    std::cout << constructionSite->getCurrentPlayingFieldOfMonominos() << std::flush;
+//}
+
+void Game::drawFrameOnTerminalForDominos() const {
+    std::cout << constructionSite->getCurrentPlayingFieldOfDominos() << std::flush;
 }
 
 void Game::clearTerminal() {

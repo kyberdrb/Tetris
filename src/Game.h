@@ -8,8 +8,8 @@ class Game {
 public:
     Game();
 
-    void startGameForMonominos();
-//    void startGameForDominos();
+//    void startGameForMonominos();
+    void startGameForDominos();
 
 private:
     std::unique_ptr<ConstructionSite> constructionSite;
@@ -18,5 +18,6 @@ private:
     void loadInputFromTerminal();
     void recalculateGameLogic();
     void clearTerminal();
-    void drawFrameOnTerminal() const;
+//    void drawFrameOnTerminalForMonominos() const;
+    void drawFrameOnTerminalForDominos() const;
 };

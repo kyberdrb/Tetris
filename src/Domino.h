@@ -12,8 +12,11 @@ class Domino {
 public:
     Domino();
 
-    int_fast32_t getRow() const;
-    int_fast32_t getColumn() const;
+    int_fast32_t getRowOfFirstMonomino() const;
+    int_fast32_t getColumnOfFirstMonomino() const;
+
+    int_fast32_t getRowOfSecondMonomino() const;
+    int_fast32_t getColumnOfSecondMonomino() const;
 
     bool isVisible() const;
     void makeVisible();

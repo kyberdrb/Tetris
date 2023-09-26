@@ -11,10 +11,17 @@ Domino::Domino() :
     this->secondMonomino->moveRight();
 }
 
-int_fast32_t Domino::getRow() const {
+int_fast32_t Domino::getRowOfFirstMonomino() const {
     return this->firstMonomino->getRow();
 }
-int_fast32_t Domino::getColumn() const {
+int_fast32_t Domino::getColumnOfFirstMonomino() const {
+    return this->firstMonomino->getColumn();
+}
+
+int_fast32_t Domino::getRowOfSecondMonomino() const {
+    return this->firstMonomino->getRow();
+}
+int_fast32_t Domino::getColumnOfSecondMonomino() const {
     return this->firstMonomino->getColumn();
 }
 

@@ -4,7 +4,8 @@
 
 int main() {
     auto game = std::make_unique<Game>();
-    game->startGameForMonominos();
+//    game->startGameForMonominos();
+    game->startGameForDominos();
 
     return 0;
 }
