@@ -8,7 +8,8 @@ class Game {
 public:
     Game();
 
-    void startGame();
+    void startGameForMonominos();
+//    void startGameForDominos();
 
 private:
     std::unique_ptr<ConstructionSite> constructionSite;
