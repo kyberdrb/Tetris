@@ -15,5 +15,5 @@ TEST_F(TetrisTestSuite, test_playingField) {
     auto constructionSite = std::make_unique<ConstructionSite>(rows, columns);
     EXPECT_EQ(rows, constructionSite->getNumberOfRows());
     EXPECT_EQ(columns, constructionSite->getNumberOfColumns());
-    EXPECT_EQ("|   |\n|   |\n‾‾‾‾‾\n", constructionSite->getCurrentPlayingField());
+    EXPECT_EQ("|   |\n|   |\n‾‾‾‾‾\n", constructionSite->getCurrentPlayingFieldOfMonominos());
 }

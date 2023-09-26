@@ -68,7 +68,7 @@ uint_fast32_t ConstructionSite::getNumberOfColumns() const {
     return this->columns;
 }
 
-std::string ConstructionSite::getCurrentPlayingField() {
+std::string ConstructionSite::getCurrentPlayingFieldOfMonominos() {
     if (this->activeMonomino->isVisible()) {
         this->showActiveMonominoOnPlayingField();
     }
@@ -96,6 +96,27 @@ std::string ConstructionSite::getCurrentPlayingField() {
     }
     return buffer.str();
 }
+
+//std::string ConstructionSite::getCurrentPlayingFieldOfDominos() {
+//    if (this->activeDomino->isVisible()) {
+//        this->showActiveDominoOnPlayingField();
+//    }
+//
+//    for (const auto& frozenDomino : this->frozenDominos ) {
+//        if (frozenDomino->isVisible() ) {
+//            showFrozenDominoOnPlayingField(*frozenDomino);
+//        }
+//    }
+//
+//    std::stringstream buffer;
+//    for (const auto& row : playingField) {
+//        for (const auto& column : row) {
+//            buffer << column;
+//        }
+//        buffer << "\n";
+//    }
+//    return buffer.str();
+//}
 
 void ConstructionSite::showActiveMonominoOnPlayingField() {
     this->playingField
@@ -173,7 +194,7 @@ void ConstructionSite::moveActiveMonominoDown() {
     }
 
     this->freezeActiveMonomino();
-    this->removeLastLineWhenFull();
+    this->removeLastLineOfMonominosWhenFull();
     this->createNewActiveMonomino();
 }
 
@@ -197,8 +218,7 @@ void ConstructionSite::createNewActiveMonomino() {
 //    this->activeDomino = std::make_unique<Domino>();
 //}
 
-// for Monominos
-void ConstructionSite::removeLastLineWhenFull() {
+void ConstructionSite::removeLastLineOfMonominosWhenFull() {
     for (int column = this->leftColumnIndexOfUsablePlayingArea(); column <= this->rightColumnIndexOfUsablePlayingArea(); ++column) {
         if (this->playingField.at(this->bottomRowIndexOfUsablePlayingArea() ).at(column) == BLANK) {
             return;
@@ -231,8 +251,7 @@ void ConstructionSite::removeLastLineWhenFull() {
     }
 }
 
-// for Dominos
-//void ConstructionSite::removeLastLineWhenFull() {
+//void ConstructionSite::removeLastLineOfDominosWhenFull() {
 //
 //}
 

@@ -90,7 +90,7 @@ void Game::recalculateGameLogic() {
 }
 
 void Game::drawFrameOnTerminal() const {
-    std::cout << constructionSite->getCurrentPlayingField() << std::flush;
+    std::cout << constructionSite->getCurrentPlayingFieldOfMonominos() << std::flush;
 }
 
 void Game::clearTerminal() {

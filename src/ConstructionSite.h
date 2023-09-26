@@ -11,10 +11,8 @@ class ConstructionSite {
 public:
     ConstructionSite(uint_fast32_t rows, uint_fast32_t columns);
 
-    uint_fast32_t getNumberOfRows() const;
-    uint_fast32_t getNumberOfColumns() const;
-
-    std::string getCurrentPlayingField();
+    std::string getCurrentPlayingFieldOfMonominos();
+//    std::string getCurrentPlayingFieldOfDominos();
 
     bool isMonominoSpawningSpotPopulatedWithFrozenMonomino();
 //    bool isDominoSpawningSpotPopulatedWithFrozenDomino();
@@ -49,14 +47,17 @@ private:
 
     std::vector<std::vector<std::string>> playingField;
 
+    uint_fast32_t getNumberOfRows() const;
+    uint_fast32_t getNumberOfColumns() const;
+    uint_fast32_t bottomRowIndexOfUsablePlayingArea() const;
+    uint_fast32_t leftColumnIndexOfUsablePlayingArea() const;
+    uint_fast32_t rightColumnIndexOfUsablePlayingArea() const;
+
     void showActiveMonominoOnPlayingField();
 //    void showActiveDominoOnPlayingField();
     void showFrozenMonominoOnPlayingField(const Monomino& brick);
 //    void showFrozenDominoOnPlayingField(const Domino& brick);
 
-    uint_fast32_t bottomRowIndexOfUsablePlayingArea() const;
-    uint_fast32_t leftColumnIndexOfUsablePlayingArea() const;
-    uint_fast32_t rightColumnIndexOfUsablePlayingArea() const;
-
-    void removeLastLineWhenFull();
+    void removeLastLineOfMonominosWhenFull();
+//    void removeLastLineOfDominosWhenFull();
 };
