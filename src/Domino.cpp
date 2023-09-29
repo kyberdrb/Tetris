@@ -19,10 +19,10 @@ int_fast32_t Domino::getColumnOfFirstMonomino() const {
 }
 
 int_fast32_t Domino::getRowOfSecondMonomino() const {
-    return this->firstMonomino->getRow();
+    return this->secondMonomino->getRow();
 }
 int_fast32_t Domino::getColumnOfSecondMonomino() const {
-    return this->firstMonomino->getColumn();
+    return this->secondMonomino->getColumn();
 }
 
 bool Domino::isVisible() const {

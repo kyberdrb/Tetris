@@ -199,7 +199,27 @@ uint_fast32_t ConstructionSite::bottomRowIndexOfUsablePlayingArea() const {
 //}
 
 void ConstructionSite::moveActiveDominoDown() {
+    bool hasFreeSpaceFromFloorOrOtherMonominos = this->playingField
+        .at(this->activeDomino->lookBelow() )
+        .at(this->activeDomino->getColumnOfFirstMonomino() ) == BLANK;
+    if (hasFreeSpaceFromFloorOrOtherMonominos) {
+        this->playingField
+            .at(this->activeDomino->getRowOfFirstMonomino())
+            .at(this->activeDomino->getColumnOfFirstMonomino())
+            .assign(BLANK);
 
+        this->playingField
+            .at(this->activeDomino->getRowOfSecondMonomino())
+            .at(this->activeDomino->getColumnOfSecondMonomino())
+            .assign(BLANK);
+
+        this->activeDomino->moveDown();
+        return;
+    }
+
+    this->freezeActiveDomino();
+    this->removeLastLineOfDominosWhenFull();
+    this->createNewActiveDomino();
 }
 
 //void ConstructionSite::freezeActiveMonomino() {
@@ -272,7 +292,15 @@ void ConstructionSite::removeLastLineOfDominosWhenFull() {
 //}
 
 void ConstructionSite::moveActiveDominoLeft() {
+    bool hasDistanceFromLeftWall = this->activeDomino->getColumnOfFirstMonomino() > this->leftColumnIndexOfUsablePlayingArea();
+    if (hasDistanceFromLeftWall) {
+        this->playingField
+                .at(this->activeDomino->getRowOfSecondMonomino())
+                .at(this->activeDomino->getColumnOfSecondMonomino())
+                .assign(BLANK);
 
+        this->activeDomino->moveLeft();
+    }
 }
 
 //void ConstructionSite::moveActiveMonominoRight() {
@@ -292,7 +320,15 @@ void ConstructionSite::moveActiveDominoLeft() {
 //}
 
 void ConstructionSite::moveActiveDominoRight() {
+    bool hasDistanceFromRightWall = this->activeDomino->getColumnOfSecondMonomino() < this->rightColumnIndexOfUsablePlayingArea();
+    if (hasDistanceFromRightWall) {
+        this->playingField
+                .at(this->activeDomino->getRowOfFirstMonomino())
+                .at(this->activeDomino->getColumnOfFirstMonomino())
+                .assign(BLANK);
 
+        this->activeDomino->moveRight();
+    }
 }
 
 uint_fast32_t ConstructionSite::leftColumnIndexOfUsablePlayingArea() const {
