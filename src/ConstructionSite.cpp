@@ -26,7 +26,7 @@ ConstructionSite::ConstructionSite(uint_fast32_t rows, uint_fast32_t columns) :
         activeDomino(std::make_unique<Domino>() )
 {
     // TODO adjustPlaygroundDimensions()
-    //  - check if at least one brick_1 fits in the playground: rows is greater or equal than 3; columns are greater or equal than 3
+    //  - check if at least one brick_1 fits in the playground: rows is greater or equal than 3; columns are greater or equal than 3 in 5x6 playing field
 
     // TODO encapsulate to function reserveCapacity()
     playingField.resize(rows);
@@ -59,13 +59,6 @@ ConstructionSite::ConstructionSite(uint_fast32_t rows, uint_fast32_t columns) :
     for (int column = 0; column < columns; ++column) {
         lastRow.at(column).assign(FLOOR);
     }
-}
-
-uint_fast32_t ConstructionSite::getNumberOfRows() const {
-    return this->rows;
-}
-uint_fast32_t ConstructionSite::getNumberOfColumns() const {
-    return this->columns;
 }
 
 //std::string ConstructionSite::getCurrentPlayingFieldOfMonominos() {
@@ -137,7 +130,15 @@ void ConstructionSite::showActiveDominoOnPlayingField() {
 //}
 
 void ConstructionSite::showFrozenDominoOnPlayingField(const Domino& brick) {
+    this->playingField
+        .at(brick.getRowOfFirstMonomino() )
+        .at(brick.getColumnOfFirstMonomino() )
+        .assign(BRICK);
 
+    this->playingField
+        .at(brick.getRowOfSecondMonomino() )
+        .at(brick.getColumnOfSecondMonomino() )
+        .assign(BRICK);
 }
 
 //bool ConstructionSite::isMonominoSpawningSpotPopulatedWithFrozenMonomino() {
@@ -150,11 +151,28 @@ void ConstructionSite::showFrozenDominoOnPlayingField(const Domino& brick) {
 //}
 
 bool ConstructionSite::isDominoSpawningSpotPopulatedWithFrozenDomino() {
-//    for (const auto& frozenDomino : frozenDominos) {
-//        if (this->activeDomino->getRow() == frozenDomino->getRowOfFirstMonomino() && this->activeDomino->getColumn() == frozenDomino->getColumnOfFirstMonomino() ) {
-//            return true;
-//        }
-//    }
+    for (const auto & frozenDomino : frozenDominos) {
+        bool isFirstMonominoOfDominoCollidingWithFrozenDomino =
+            (this->activeDomino->getRowOfFirstMonomino() == frozenDomino->getRowOfFirstMonomino() &&
+             this->activeDomino->getColumnOfFirstMonomino() == frozenDomino->getColumnOfFirstMonomino() )
+            ||
+            (this->activeDomino->getRowOfFirstMonomino() == frozenDomino->getRowOfSecondMonomino() &&
+             this->activeDomino->getColumnOfFirstMonomino() == frozenDomino->getColumnOfSecondMonomino() );
+        
+        bool isSecondMonominoOfDominoCollidingWithFrozenDomino =
+            (this->activeDomino->getRowOfSecondMonomino() == frozenDomino->getRowOfSecondMonomino() &&
+             this->activeDomino->getColumnOfSecondMonomino() == frozenDomino->getColumnOfSecondMonomino() )
+             ||
+            (this->activeDomino->getRowOfSecondMonomino() == frozenDomino->getRowOfFirstMonomino() &&
+             this->activeDomino->getColumnOfSecondMonomino() == frozenDomino->getColumnOfFirstMonomino() );
+
+        bool isActiveDominoCollidingWithFrozenDomino =
+            isFirstMonominoOfDominoCollidingWithFrozenDomino || isSecondMonominoOfDominoCollidingWithFrozenDomino;
+
+        if (isActiveDominoCollidingWithFrozenDomino) {
+            return true;
+        }
+    }
     return false;
 }
 
@@ -172,10 +190,6 @@ bool ConstructionSite::isActiveDominoHidden() {
 
 void ConstructionSite::makeActiveDominoVisible() {
     this->activeDomino->makeVisible();
-}
-
-uint_fast32_t ConstructionSite::bottomRowIndexOfUsablePlayingArea() const {
-    return this->rows - 2;
 }
 
 //void ConstructionSite::moveActiveMonominoDown() {
@@ -199,9 +213,19 @@ uint_fast32_t ConstructionSite::bottomRowIndexOfUsablePlayingArea() const {
 //}
 
 void ConstructionSite::moveActiveDominoDown() {
-    bool hasFreeSpaceFromFloorOrOtherMonominos = this->playingField
-        .at(this->activeDomino->lookBelow() )
-        .at(this->activeDomino->getColumnOfFirstMonomino() ) == BLANK;
+    bool hasFirstMonominoFreeSpaceFromFloorOrOtherMonominos =
+        this->playingField
+            .at(this->activeDomino->lookBelow() )
+            .at(this->activeDomino->getColumnOfFirstMonomino() ) == BLANK;
+
+    bool hasSecondMonominoFreeSpaceFromFloorOrOtherMonominos =
+        this->playingField
+            .at(this->activeDomino->lookBelow() )
+            .at(this->activeDomino->getColumnOfSecondMonomino() ) == BLANK;
+
+    bool hasFreeSpaceFromFloorOrOtherMonominos =
+        hasFirstMonominoFreeSpaceFromFloorOrOtherMonominos && hasSecondMonominoFreeSpaceFromFloorOrOtherMonominos;
+
     if (hasFreeSpaceFromFloorOrOtherMonominos) {
         this->playingField
             .at(this->activeDomino->getRowOfFirstMonomino())
@@ -272,7 +296,63 @@ void ConstructionSite::createNewActiveDomino() {
 //}
 
 void ConstructionSite::removeLastLineOfDominosWhenFull() {
+    // TODO implement deletion of multiple full rows
+//    uint_fast32_t fullRowIndex = 0;
+//
+//    for (   uint_fast32_t row = this->bottomRowIndexOfUsablePlayingArea(); row >= 0; ++row) {
+//
+//    }
 
+    for (   uint_fast32_t column = this->leftColumnIndexOfUsablePlayingArea();
+            column < this->rightColumnIndexOfUsablePlayingArea();
+            ++column)
+    {
+        std::string signInRow =
+            this->playingField
+                .at(this->bottomRowIndexOfUsablePlayingArea())
+                .at(column);
+
+        if (signInRow == BLANK) {
+            return;
+        }
+    }
+
+    this->frozenDominos.erase(
+        std::remove_if(this->frozenDominos.begin(), this->frozenDominos.end(),
+            [&](const auto & frozenDomino) {
+                if (frozenDomino->getRowOfFirstMonomino() == this->bottomRowIndexOfUsablePlayingArea() ) {
+                    this->playingField
+                        .at(frozenDomino->getRowOfFirstMonomino())
+                        .at(frozenDomino->getColumnOfFirstMonomino())
+                        .assign(BLANK);
+
+                        this->playingField
+                            .at(frozenDomino->getRowOfSecondMonomino())
+                            .at(frozenDomino->getColumnOfSecondMonomino())
+                            .assign(BLANK);
+                }
+
+                return frozenDomino->getRowOfFirstMonomino() == this->bottomRowIndexOfUsablePlayingArea();
+            }),
+        this->frozenDominos.end() );
+
+    for (const auto & frozenDomino : this->frozenDominos) {
+        this->playingField
+            .at(frozenDomino->getRowOfFirstMonomino())
+            .at(frozenDomino->getColumnOfFirstMonomino())
+            .assign(BLANK);
+
+        this->playingField
+            .at(frozenDomino->getRowOfSecondMonomino())
+            .at(frozenDomino->getColumnOfSecondMonomino())
+            .assign(BLANK);
+
+        frozenDomino->moveDown();
+    }
+}
+
+uint_fast32_t ConstructionSite::bottomRowIndexOfUsablePlayingArea() const {
+    return this->rows - 2;
 }
 
 //void ConstructionSite::moveActiveMonominoLeft() {
@@ -337,4 +417,12 @@ uint_fast32_t ConstructionSite::leftColumnIndexOfUsablePlayingArea() const {
 
 uint_fast32_t ConstructionSite::rightColumnIndexOfUsablePlayingArea() const {
     return this->columns - 2;
+}
+
+uint_fast32_t ConstructionSite::getNumberOfRows() const {
+    return this->rows;
+}
+
+uint_fast32_t ConstructionSite::getNumberOfColumns() const {
+    return this->columns;
 }
