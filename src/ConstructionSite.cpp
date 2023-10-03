@@ -296,63 +296,70 @@ void ConstructionSite::createNewActiveDomino() {
 //}
 
 void ConstructionSite::removeLastLineOfDominosWhenFull() {
-    // TODO implement deletion of multiple full rows
-//    uint_fast32_t fullRowIndex = 0;
-//
-//    for (   uint_fast32_t row = this->bottomRowIndexOfUsablePlayingArea(); row >= 0; ++row) {
-//
-//    }
+    // TODO implement deletion of multiple full rows at once
+    // TODO implement deletion of any single full row of single-row Dominos
+    uint_fast32_t fullRowIndex = 0;
+    for (uint_fast32_t rowInUsablePlayingArea = 0; rowInUsablePlayingArea <= this->bottomRowIndexOfUsablePlayingArea(); ++rowInUsablePlayingArea) {
+        const auto& isRowFull = this->isRowFull(this->playingField.at(rowInUsablePlayingArea));
 
-    for (   uint_fast32_t column = this->leftColumnIndexOfUsablePlayingArea();
-            column < this->rightColumnIndexOfUsablePlayingArea();
-            ++column)
-    {
-        std::string signInRow =
-            this->playingField
-                .at(this->bottomRowIndexOfUsablePlayingArea())
-                .at(column);
-
-        if (signInRow == BLANK) {
-            return;
+        if (isRowFull) {
+            fullRowIndex = rowInUsablePlayingArea;
+            break;
         }
     }
 
     this->frozenDominos.erase(
         std::remove_if(this->frozenDominos.begin(), this->frozenDominos.end(),
             [&](const auto & frozenDomino) {
-                if (frozenDomino->getRowOfFirstMonomino() == this->bottomRowIndexOfUsablePlayingArea() ) {
+                if (frozenDomino->getRowOfFirstMonomino() == fullRowIndex ) {
                     this->playingField
                         .at(frozenDomino->getRowOfFirstMonomino())
                         .at(frozenDomino->getColumnOfFirstMonomino())
                         .assign(BLANK);
 
-                        this->playingField
-                            .at(frozenDomino->getRowOfSecondMonomino())
-                            .at(frozenDomino->getColumnOfSecondMonomino())
-                            .assign(BLANK);
+                    this->playingField
+                        .at(frozenDomino->getRowOfSecondMonomino())
+                        .at(frozenDomino->getColumnOfSecondMonomino())
+                        .assign(BLANK);
                 }
 
-                return frozenDomino->getRowOfFirstMonomino() == this->bottomRowIndexOfUsablePlayingArea();
+                return frozenDomino->getRowOfFirstMonomino() == fullRowIndex;
             }),
         this->frozenDominos.end() );
 
     for (const auto & frozenDomino : this->frozenDominos) {
-        this->playingField
-            .at(frozenDomino->getRowOfFirstMonomino())
-            .at(frozenDomino->getColumnOfFirstMonomino())
-            .assign(BLANK);
+        if (frozenDomino->getRowOfFirstMonomino() < fullRowIndex) {
+            this->playingField
+                    .at(frozenDomino->getRowOfFirstMonomino())
+                    .at(frozenDomino->getColumnOfFirstMonomino())
+                    .assign(BLANK);
 
-        this->playingField
-            .at(frozenDomino->getRowOfSecondMonomino())
-            .at(frozenDomino->getColumnOfSecondMonomino())
-            .assign(BLANK);
+            this->playingField
+                    .at(frozenDomino->getRowOfSecondMonomino())
+                    .at(frozenDomino->getColumnOfSecondMonomino())
+                    .assign(BLANK);
 
-        frozenDomino->moveDown();
+            frozenDomino->moveDown();
+        }
     }
 }
 
 uint_fast32_t ConstructionSite::bottomRowIndexOfUsablePlayingArea() const {
     return this->rows - 2;
+}
+
+bool ConstructionSite::isRowFull(std::vector<std::string>& row) const {
+    for (   uint_fast32_t column = this->leftColumnIndexOfUsablePlayingArea();
+            column < this->rightColumnIndexOfUsablePlayingArea();
+            ++column)
+    {
+        std::string signInRow = row.at(column);
+
+        if (signInRow == BLANK) {
+            return false;
+        }
+    }
+    return true;
 }
 
 //void ConstructionSite::moveActiveMonominoLeft() {

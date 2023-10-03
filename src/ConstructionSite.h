@@ -60,4 +60,6 @@ private:
 
 //    void removeLastLineOfMonominosWhenFull();
     void removeLastLineOfDominosWhenFull();
+
+    bool isRowFull(std::vector<std::string>& row) const;
 };
