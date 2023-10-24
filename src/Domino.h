@@ -30,7 +30,7 @@ public:
     int_fast32_t lookRight() const;
     void moveRight();
 
-    // TODO implement rotation
+    void rotateClockwise();
 
 private:
     std::unique_ptr<Monomino> firstMonomino;

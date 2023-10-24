@@ -30,6 +30,8 @@ public:
 //    void moveActiveMonominoRight();
     void moveActiveDominoRight();
 
+    void rotateActiveDominoCounterclockwise();
+
 //    void freezeActiveMonomino();
     void freezeActiveDomino();
 //    void createNewActiveMonomino();

@@ -30,6 +30,10 @@ void Monomino::moveDown() {
     this->row += 1;
 }
 
+void Monomino::moveUp() {
+    this->row -= 1;
+}
+
 int_fast32_t Monomino::lookLeft() const {
     return this->column - 1;
 }

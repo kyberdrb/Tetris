@@ -83,7 +83,7 @@ void Game::startGameForDominos() {
         }
         if (this->keyboardInputCharacters == "c") {
             // TODO implement Domino rotation - clockwise, but the direction is irrelevant
-//            this->constructionSite->rotateActiveDomino();
+            this->constructionSite->rotateActiveDominoCounterclockwise();
             continue;
         }
     }

@@ -64,3 +64,32 @@ void Domino::moveRight() {
     this->firstMonomino->moveRight();
     this->secondMonomino->moveRight();
 }
+
+// Rotate domino by the pivot - the first monomino
+// f: first monomino - the pivot
+// s: second monomino
+//
+//         s
+// fs f sf f
+//    s
+//
+// ##            -> # (2, 4)
+// (2, 4) (2, 5)    # (3, 4)    second monomino: move down, move left
+//
+// # (2, 4) -> ## (2, 4) (2, 5) second monomino: move right, move up
+// # (3, 4)
+void Domino::rotateClockwise() {
+    bool isDominoInHorizontalPosition = this->firstMonomino->getRow() == this->secondMonomino->getRow();
+    if (isDominoInHorizontalPosition) {
+        // first monomino (pivot) =         (2, 4)
+        // second monomino =                (2, 5)
+        // second monomino (desired) =      (3, 4)
+        this->secondMonomino->moveDown(); // 3, 5
+        this->secondMonomino->moveLeft(); // 3, 4
+        return;
+    }
+
+    // domino is in vertical position
+    this->secondMonomino->moveRight();
+    this->secondMonomino->moveUp();
+}

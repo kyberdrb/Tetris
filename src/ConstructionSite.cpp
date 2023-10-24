@@ -246,6 +246,10 @@ void ConstructionSite::moveActiveDominoDown() {
     this->createNewActiveDomino();
 }
 
+void ConstructionSite::rotateActiveDominoCounterclockwise() {
+    this->activeDomino->rotateClockwise();
+}
+
 //void ConstructionSite::freezeActiveMonomino() {
 //    this->frozenMonominos.emplace_back(std::move(this->activeMonomino) );
 //}

@@ -16,6 +16,8 @@ public:
     int_fast32_t lookBelow() const;
     void moveDown();
 
+    void moveUp();
+
     int_fast32_t lookLeft() const;
     void moveLeft();
 
