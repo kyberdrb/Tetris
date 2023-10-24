@@ -299,7 +299,6 @@ void ConstructionSite::removeLastLineOfDominosWhenFull() {
     // TODO implement deletion of multiple full rows at once
 //    std::vector<uint_fast32_t> fullRowsIndexesInUsablePlayingArea;
 
-    // TODO implement deletion of any single full row of single-row Dominos
     uint_fast32_t fullRowIndex = 0;
     for (uint_fast32_t rowInUsablePlayingArea = 0; rowInUsablePlayingArea <= this->bottomRowIndexOfUsablePlayingArea(); ++rowInUsablePlayingArea) {
         const auto& isRowFull = this->isRowFull(this->playingField.at(rowInUsablePlayingArea));
