@@ -57,7 +57,7 @@ void Domino::moveLeft() {
 
 int_fast32_t Domino::lookRight() const {
     // TODO consider the position of each monomino, e.g. after move or rotation
-    return this->firstMonomino->lookRight();
+    return this->secondMonomino->lookRight();
 }
 
 void Domino::moveRight() {

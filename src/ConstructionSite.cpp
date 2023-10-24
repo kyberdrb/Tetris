@@ -297,6 +297,8 @@ void ConstructionSite::createNewActiveDomino() {
 
 void ConstructionSite::removeLastLineOfDominosWhenFull() {
     // TODO implement deletion of multiple full rows at once
+//    std::vector<uint_fast32_t> fullRowsIndexesInUsablePlayingArea;
+
     // TODO implement deletion of any single full row of single-row Dominos
     uint_fast32_t fullRowIndex = 0;
     for (uint_fast32_t rowInUsablePlayingArea = 0; rowInUsablePlayingArea <= this->bottomRowIndexOfUsablePlayingArea(); ++rowInUsablePlayingArea) {
@@ -380,11 +382,15 @@ bool ConstructionSite::isRowFull(std::vector<std::string>& row) const {
 
 void ConstructionSite::moveActiveDominoLeft() {
     bool hasDistanceFromLeftWall = this->activeDomino->getColumnOfFirstMonomino() > this->leftColumnIndexOfUsablePlayingArea();
-    if (hasDistanceFromLeftWall) {
+    bool hasFreeSpaceOnLeftSide = this->playingField
+        .at(this->activeDomino->getRowOfFirstMonomino())
+        .at(this->activeDomino->lookLeft() ) == BLANK;
+
+    if (hasDistanceFromLeftWall && hasFreeSpaceOnLeftSide) {
         this->playingField
-                .at(this->activeDomino->getRowOfSecondMonomino())
-                .at(this->activeDomino->getColumnOfSecondMonomino())
-                .assign(BLANK);
+            .at(this->activeDomino->getRowOfSecondMonomino())
+            .at(this->activeDomino->getColumnOfSecondMonomino())
+            .assign(BLANK);
 
         this->activeDomino->moveLeft();
     }
@@ -408,7 +414,11 @@ void ConstructionSite::moveActiveDominoLeft() {
 
 void ConstructionSite::moveActiveDominoRight() {
     bool hasDistanceFromRightWall = this->activeDomino->getColumnOfSecondMonomino() < this->rightColumnIndexOfUsablePlayingArea();
-    if (hasDistanceFromRightWall) {
+    bool hasFreeSpaceOnRightSide = this->playingField
+        .at(this->activeDomino->getRowOfSecondMonomino())
+        .at(this->activeDomino->lookRight()) == BLANK;
+
+    if (hasDistanceFromRightWall && hasFreeSpaceOnRightSide) {
         this->playingField
                 .at(this->activeDomino->getRowOfFirstMonomino())
                 .at(this->activeDomino->getColumnOfFirstMonomino())
