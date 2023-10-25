@@ -57,11 +57,15 @@ private:
 
 //    void showActiveMonominoOnPlayingField();
     void showActiveDominoOnPlayingField();
-//    void showFrozenMonominoOnPlayingField(const Monomino& brick);
-    void showFrozenDominoOnPlayingField(const Domino& brick);
+//    void showFrozenMonominoOnPlayingField(const Monomino& domino);
+    void showFrozenDominoOnPlayingField(const Domino& domino);
 
 //    void removeLastLineOfMonominosWhenFull();
     void removeLastLineOfDominosWhenFull();
 
     bool isRowFull(std::vector<std::string>& row) const;
+
+    void reserveCapacity();
+
+    void initializePlayingFieldBoundaries();
 };

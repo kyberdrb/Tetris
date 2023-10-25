@@ -20,8 +20,11 @@ public:
 
     bool isVisible() const;
     void makeVisible();
+    void hideFirstMonomino();
+    void hideSecondMonomino();
 
-    int_fast32_t lookBelow() const;
+    int_fast32_t lookBelowFirstMonomino() const;
+    int_fast32_t lookBelowSecondMonomino() const;
     void moveDown();
 
     int_fast32_t lookLeft() const;
@@ -31,6 +34,7 @@ public:
     void moveRight();
 
     void rotateClockwise();
+    bool isVertical() const;
 
 private:
     std::unique_ptr<Monomino> firstMonomino;

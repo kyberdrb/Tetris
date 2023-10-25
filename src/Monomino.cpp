@@ -22,6 +22,10 @@ void Monomino::makeVisible() {
     this->isMonominoVisible = true;
 }
 
+void Monomino::hide() {
+    this->isMonominoVisible = false;
+}
+
 int_fast32_t Monomino::lookBelow() const {
     return this->row + 1;
 }

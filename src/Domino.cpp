@@ -35,9 +35,20 @@ void Domino::makeVisible() {
     this->secondMonomino->makeVisible();
 }
 
-int_fast32_t Domino::lookBelow() const {
-    // TODO consider the position of each monomino, e.g. after move or rotation
+void Domino::hideFirstMonomino() {
+    this->firstMonomino->hide();
+}
+
+void Domino::hideSecondMonomino() {
+    this->secondMonomino->hide();
+}
+
+int_fast32_t Domino::lookBelowFirstMonomino() const {
     return this->firstMonomino->lookBelow();
+}
+
+int_fast32_t Domino::lookBelowSecondMonomino() const {
+    return this->secondMonomino->lookBelow();
 }
 
 void Domino::moveDown() {
@@ -79,6 +90,7 @@ void Domino::moveRight() {
 // # (2, 4) -> ## (2, 4) (2, 5) second monomino: move right, move up
 // # (3, 4)
 void Domino::rotateClockwise() {
+    // TODO implement full clockwise rotation pattern
     bool isDominoInHorizontalPosition = this->firstMonomino->getRow() == this->secondMonomino->getRow();
     if (isDominoInHorizontalPosition) {
         // first monomino (pivot) =         (2, 4)
@@ -92,4 +104,8 @@ void Domino::rotateClockwise() {
     // domino is in vertical position
     this->secondMonomino->moveRight();
     this->secondMonomino->moveUp();
+}
+
+bool Domino::isVertical() const {
+    return this->firstMonomino->getColumn() == this->secondMonomino->getColumn();
 }

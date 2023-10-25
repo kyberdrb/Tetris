@@ -12,6 +12,7 @@ public:
 
     bool isVisible() const;
     void makeVisible();
+    void hide();
 
     int_fast32_t lookBelow() const;
     void moveDown();
