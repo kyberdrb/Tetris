@@ -43,10 +43,8 @@ void ConstructionSite::initializePlayingFieldBoundaries() {
     uint_fast32_t forelastRowIndex = bottomRowIndexOfUsablePlayingArea();
     for (uint_fast32_t row = 0; row <= forelastRowIndex; ++row) {
         for (uint_fast32_t column = 0; column < columns; ++column) {
-            // check first and forelast column - fill them with WALL character
-            // TODO encapsulate condition to 'bool isSideBorder = isLeftBorder || isRightBorder;
             bool isLeftBorder = column == 0;
-            bool isRightBorder = column == columns - 1;
+            bool isRightBorder = column == (columns - 1);
             bool isSideBorder = isLeftBorder || isRightBorder;
             if (isSideBorder) {
                 playingField.at(row).at(column) = WALL;
@@ -133,14 +131,14 @@ void ConstructionSite::showActiveDominoOnPlayingField() {
 //}
 
 void ConstructionSite::showFrozenDominoOnPlayingField(const Domino& domino) {
-    if (domino.isVisible() ) {
+    if (domino.isFirstMonominoVisible() ) {
         this->playingField
             .at(domino.getRowOfFirstMonomino())
             .at(domino.getColumnOfFirstMonomino())
             .assign(BRICK);
     }
 
-    if (domino.isVisible() ) {
+    if (domino.isSecondMonominoVisible() ) {
         this->playingField
             .at(domino.getRowOfSecondMonomino())
             .at(domino.getColumnOfSecondMonomino())
@@ -259,6 +257,7 @@ void ConstructionSite::moveActiveDominoDown() {
 }
 
 void ConstructionSite::rotateActiveDominoCounterclockwise() {
+    // TODO check boundary conditions before any rotation
     // Clear previous position of second monomino
     this->playingField
             .at(this->activeDomino->getRowOfSecondMonomino())
@@ -317,17 +316,58 @@ void ConstructionSite::createNewActiveDomino() {
 //    }
 //}
 
+// TODO fix scenario with deleting single full row: after last full row deletion the game terminates
+//  |    |
+//  |    |
+//  | hh |
+//  |v v |
+//  ``````
+//
+// TODO fix scenario with deleting multiple full rows: the game gets terminated instead of a row being deleted
+//  |vv  |
+//  |vvhh|  <- line #1 will be deleted
+//  |vv v|
+//  |vv v|
+//  ``````
+//
+//  |    |
+//  |##  |  <- line #1 was deleted
+//  |## #|
+//  |## #|
+//  ``````
+//
+//  |    |
+//  |##  |
+//  |## #|
+//  |## #|
+//  ``````
+//
+//  |    |
+//  |##  |
+//  |####|  <- add (vertical) domino to the gap: line #2 will be deleted
+//  |####|
+//  ``````
+//
+//  |    |
+//  |    |
+//  |##  | <- line #2 was deleted
+//  |####|
+//  ``````
+//
+//  |    |
+//  |    |
+//  |####| <- add (horizontal) domino to the gap: line #2 won't be deleted - the game is terminated
+//  |####|
+//  ``````
 void ConstructionSite::removeLastLineOfDominosWhenFull() {
     // TODO implement deletion of multiple full rows at once
 //    std::vector<uint_fast32_t> fullRowsIndexesInUsablePlayingArea;
 
-    // TODO extend logic for vertical Domino
-    //  implement deletion of a Monomino in a Domino which is in a full row - partial Domino deletion
     // find the full row
     uint_fast32_t fullRowIndex = 0;
     bool areRowsPartiallyFull = true;
     for (uint_fast32_t rowInUsablePlayingArea = 0; rowInUsablePlayingArea <= this->bottomRowIndexOfUsablePlayingArea(); ++rowInUsablePlayingArea) {
-        const bool isRowFull = this->isRowFull(this->playingField.at(rowInUsablePlayingArea));
+        const bool isRowFull = this->isRowFull(this->playingField.at(rowInUsablePlayingArea) );
 
         if (isRowFull) {
             fullRowIndex = rowInUsablePlayingArea;
@@ -340,10 +380,7 @@ void ConstructionSite::removeLastLineOfDominosWhenFull() {
         return;
     }
 
-    // TODO **delete** all horizontal Dominoes in the full row:
-    //  erase + remove_if , i. e. restore previous code, but as a removal condition use:
-    //    frozenDomino->getRowOfFirstMonomino() == frozenDomino->getRowOfSecondMonomino()
-    //  Then wrap it to a Domino member function 'bool isHorizontal()'
+    // TODO delete also frozen Dominoes, which have both Monominoes hidden? Necessary?
     // delete all horizontal Dominoes in the full row
     this->frozenDominos.erase(
         std::remove_if(this->frozenDominos.begin(), this->frozenDominos.end(),
@@ -364,7 +401,9 @@ void ConstructionSite::removeLastLineOfDominosWhenFull() {
             }),
             this->frozenDominos.end() );
 
-    // TODO **hide** Monominos of the Domino when at least one of its Monominos is a part of the full row - partial hiding/deletion
+    // TODO implement Monominos in the Domino to a 'std::vector' instead of storing each Monomino to separate attribute
+    //  to simplify collision detection and rotation?
+    // hide those Monominos of the Domino that are a part of a full row - partial Domino hiding/deletion
     for (const auto& frozenDomino : this->frozenDominos) {
         if (frozenDomino->getRowOfFirstMonomino() == fullRowIndex) {
             this->playingField
@@ -386,38 +425,29 @@ void ConstructionSite::removeLastLineOfDominosWhenFull() {
     }
 
     // push Dominos down
-    // TODO let only those Monominos of the Domino fall, which are hidden/not visible - check visibility too?
     for (const auto & frozenDomino : this->frozenDominos) {
-        if (frozenDomino->getRowOfFirstMonomino() < fullRowIndex) {
-            // TODO implement function
-            //   then combine the two if statements into one compount condition
-//            if (frozenDomino->isFirstMonominoVisible() ) {
-                this->playingField
-                        .at(frozenDomino->getRowOfFirstMonomino())
-                        .at(frozenDomino->getColumnOfFirstMonomino())
-                        .assign(BLANK);
+        bool isFirstMonominoAbove = frozenDomino->getRowOfFirstMonomino() < fullRowIndex;
+        bool isFirstMonominoVisible = frozenDomino->isFirstMonominoVisible();
+        bool isFirstMonominoAboveAndVisible = isFirstMonominoAbove && isFirstMonominoVisible;
+        if (isFirstMonominoAboveAndVisible) {
+            this->playingField
+                    .at(frozenDomino->getRowOfFirstMonomino())
+                    .at(frozenDomino->getColumnOfFirstMonomino())
+                    .assign(BLANK);
 
-                // TODO implement function
-//                frozenDomino->moveFirstMonominoDown();
-//            }
-
-        if (frozenDomino->getRowOfSecondMonomino() < fullRowIndex) {
-            // TODO implement function
-            //   then combine the two if statements into one compount condition
-//            if (frozenDomino->isSecondMonominoVisible() ) {
-                this->playingField
-                        .at(frozenDomino->getRowOfSecondMonomino())
-                        .at(frozenDomino->getColumnOfSecondMonomino())
-                        .assign(BLANK);
-
-                // TODO implement function
-//                frozenDomino->moveSecondMonominoDown();
-//            }
+            frozenDomino->moveFirstMonominoDown();
         }
 
-            // TODO Split to two functions 'moveDownFirstMonomino' and 'moveDownSecondMonomino'?
-            //  move only when visible? i.e. allow overlapping Monominos in a Domino?
-            //frozenDomino->moveDown();
+        bool isSecondMonominoAbove = frozenDomino->getRowOfSecondMonomino() < fullRowIndex;
+        bool isSecondMonominoVisible = frozenDomino->isSecondMonominoVisible();
+        bool isSecondMonominoAboveAndVisible = isSecondMonominoAbove && isSecondMonominoVisible;
+        if (isSecondMonominoAboveAndVisible) {
+            this->playingField
+                    .at(frozenDomino->getRowOfSecondMonomino())
+                    .at(frozenDomino->getColumnOfSecondMonomino())
+                    .assign(BLANK);
+
+            frozenDomino->moveSecondMonominoDown();
         }
     }
 }

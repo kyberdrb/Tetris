@@ -30,6 +30,14 @@ bool Domino::isVisible() const {
     return areBothMonominosVisible;
 }
 
+bool Domino::isFirstMonominoVisible() const {
+    return this->firstMonomino->isVisible();
+}
+
+bool Domino::isSecondMonominoVisible() const {
+    return this->secondMonomino->isVisible();
+}
+
 void Domino::makeVisible() {
     this->firstMonomino->makeVisible();
     this->secondMonomino->makeVisible();
@@ -53,6 +61,14 @@ int_fast32_t Domino::lookBelowSecondMonomino() const {
 
 void Domino::moveDown() {
     this->firstMonomino->moveDown();
+    this->secondMonomino->moveDown();
+}
+
+void Domino::moveFirstMonominoDown() {
+    this->firstMonomino->moveDown();
+}
+
+void Domino::moveSecondMonominoDown() {
     this->secondMonomino->moveDown();
 }
 

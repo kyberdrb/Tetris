@@ -19,6 +19,8 @@ public:
     int_fast32_t getColumnOfSecondMonomino() const;
 
     bool isVisible() const;
+    bool isFirstMonominoVisible() const;
+    bool isSecondMonominoVisible() const;
     void makeVisible();
     void hideFirstMonomino();
     void hideSecondMonomino();
@@ -26,6 +28,8 @@ public:
     int_fast32_t lookBelowFirstMonomino() const;
     int_fast32_t lookBelowSecondMonomino() const;
     void moveDown();
+    void moveFirstMonominoDown();
+    void moveSecondMonominoDown();
 
     int_fast32_t lookLeft() const;
     void moveLeft();
