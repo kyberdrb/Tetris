@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <stack>
 
 class ConstructionSite {
 public:
@@ -49,6 +50,9 @@ private:
 
     std::vector<std::vector<std::string>> playingField;
 
+    void reserveCapacity();
+    void initializePlayingFieldBoundaries();
+
     uint_fast32_t getNumberOfRows() const;
     uint_fast32_t getNumberOfColumns() const;
     uint_fast32_t bottomRowIndexOfUsablePlayingArea() const;
@@ -62,10 +66,6 @@ private:
 
 //    void removeLastLineOfMonominosWhenFull();
     void removeLastLineOfDominosWhenFull();
-
-    bool isRowFull(std::vector<std::string>& row) const;
-
-    void reserveCapacity();
-
-    void initializePlayingFieldBoundaries();
+    bool isRowFull(const std::vector<std::string>& row) const;
+    std::stack<uint_fast32_t> findFullRows() const;
 };

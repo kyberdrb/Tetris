@@ -156,19 +156,19 @@ void ConstructionSite::showFrozenDominoOnPlayingField(const Domino& domino) {
 //}
 
 bool ConstructionSite::isDominoSpawningSpotPopulatedWithFrozenDomino() {
-    for (const auto & frozenDomino : frozenDominos) {
+    for (const auto& frozenDomino : frozenDominos) {
         bool isFirstMonominoOfDominoCollidingWithFrozenDomino =
-            (this->activeDomino->getRowOfFirstMonomino() == frozenDomino->getRowOfFirstMonomino() &&
-             this->activeDomino->getColumnOfFirstMonomino() == frozenDomino->getColumnOfFirstMonomino() )
+            ( ( (this->activeDomino->getRowOfFirstMonomino() == frozenDomino->getRowOfFirstMonomino() ) && frozenDomino->isFirstMonominoVisible() ) &&
+            this->activeDomino->getColumnOfFirstMonomino() == frozenDomino->getColumnOfFirstMonomino() )
             ||
-            (this->activeDomino->getRowOfFirstMonomino() == frozenDomino->getRowOfSecondMonomino() &&
+            ( ( (this->activeDomino->getRowOfFirstMonomino() == frozenDomino->getRowOfSecondMonomino() ) && frozenDomino->isSecondMonominoVisible() ) &&
              this->activeDomino->getColumnOfFirstMonomino() == frozenDomino->getColumnOfSecondMonomino() );
-        
+
         bool isSecondMonominoOfDominoCollidingWithFrozenDomino =
-            (this->activeDomino->getRowOfSecondMonomino() == frozenDomino->getRowOfSecondMonomino() &&
+            ( ( (this->activeDomino->getRowOfSecondMonomino() == frozenDomino->getRowOfSecondMonomino() ) && frozenDomino->isSecondMonominoVisible() ) &&
              this->activeDomino->getColumnOfSecondMonomino() == frozenDomino->getColumnOfSecondMonomino() )
              ||
-            (this->activeDomino->getRowOfSecondMonomino() == frozenDomino->getRowOfFirstMonomino() &&
+            ( ( (this->activeDomino->getRowOfSecondMonomino() == frozenDomino->getRowOfFirstMonomino() ) && frozenDomino->isFirstMonominoVisible() ) &&
              this->activeDomino->getColumnOfSecondMonomino() == frozenDomino->getColumnOfFirstMonomino() );
 
         bool isActiveDominoCollidingWithFrozenDomino =
@@ -316,139 +316,99 @@ void ConstructionSite::createNewActiveDomino() {
 //    }
 //}
 
-// TODO fix scenario with deleting single full row: after last full row deletion the game terminates
-//  |    |
-//  |    |
-//  | hh |
-//  |v v |
-//  ``````
-//
-// TODO fix scenario with deleting multiple full rows: the game gets terminated instead of a row being deleted
-//  |vv  |
-//  |vvhh|  <- line #1 will be deleted
-//  |vv v|
-//  |vv v|
-//  ``````
-//
-//  |    |
-//  |##  |  <- line #1 was deleted
-//  |## #|
-//  |## #|
-//  ``````
-//
-//  |    |
-//  |##  |
-//  |## #|
-//  |## #|
-//  ``````
-//
-//  |    |
-//  |##  |
-//  |####|  <- add (vertical) domino to the gap: line #2 will be deleted
-//  |####|
-//  ``````
-//
-//  |    |
-//  |    |
-//  |##  | <- line #2 was deleted
-//  |####|
-//  ``````
-//
-//  |    |
-//  |    |
-//  |####| <- add (horizontal) domino to the gap: line #2 won't be deleted - the game is terminated
-//  |####|
-//  ``````
 void ConstructionSite::removeLastLineOfDominosWhenFull() {
-    // TODO implement deletion of multiple full rows at once
-//    std::vector<uint_fast32_t> fullRowsIndexesInUsablePlayingArea;
-
     // find the full row
-    uint_fast32_t fullRowIndex = 0;
-    bool areRowsPartiallyFull = true;
-    for (uint_fast32_t rowInUsablePlayingArea = 0; rowInUsablePlayingArea <= this->bottomRowIndexOfUsablePlayingArea(); ++rowInUsablePlayingArea) {
-        const bool isRowFull = this->isRowFull(this->playingField.at(rowInUsablePlayingArea) );
+    std::stack<uint_fast32_t> fullRowsIndexesInUsablePlayingArea = findFullRows();
+    auto numberOfFullRows = fullRowsIndexesInUsablePlayingArea.size();
+    uint_fast32_t numberOfRemovedFullRows = 0;
 
-        if (isRowFull) {
-            fullRowIndex = rowInUsablePlayingArea;
-            areRowsPartiallyFull = false;
-            break;
-        }
-    }
-
-    if (areRowsPartiallyFull) {
+    if (fullRowsIndexesInUsablePlayingArea.empty() ) {
         return;
     }
 
-    // TODO delete also frozen Dominoes, which have both Monominoes hidden? Necessary?
-    // delete all horizontal Dominoes in the full row
-    this->frozenDominos.erase(
-        std::remove_if(this->frozenDominos.begin(), this->frozenDominos.end(),
-            [&](const auto & frozenDomino) {
-                if (frozenDomino->getRowOfFirstMonomino() == fullRowIndex ) {
-                    this->playingField
-                        .at(frozenDomino->getRowOfFirstMonomino())
-                        .at(frozenDomino->getColumnOfFirstMonomino())
-                        .assign(BLANK);
+    // remove each full row
+    while (numberOfRemovedFullRows < numberOfFullRows) {
+        uint_fast32_t fullRowIndex = fullRowsIndexesInUsablePlayingArea.top() + numberOfRemovedFullRows; // add offset to make deletion effective
+        fullRowsIndexesInUsablePlayingArea.pop();
 
-                    this->playingField
-                        .at(frozenDomino->getRowOfSecondMonomino())
-                        .at(frozenDomino->getColumnOfSecondMonomino())
-                        .assign(BLANK);
-                }
+        // delete all horizontal Dominoes in the full row
+        this->frozenDominos.erase(
+            std::remove_if(this->frozenDominos.begin(), this->frozenDominos.end(),
+                [&](const auto& frozenDomino) {
+                    if ((frozenDomino->getRowOfFirstMonomino() == fullRowIndex) &&
+                        (frozenDomino->getRowOfSecondMonomino() == fullRowIndex)) {
+                        this->playingField
+                            .at(frozenDomino->getRowOfFirstMonomino())
+                            .at(frozenDomino->getColumnOfFirstMonomino())
+                            .assign(BLANK);
 
-                return (frozenDomino->getRowOfFirstMonomino() == fullRowIndex) && (frozenDomino->getRowOfSecondMonomino() == fullRowIndex);
-            }),
-            this->frozenDominos.end() );
+                        this->playingField
+                            .at(frozenDomino->getRowOfSecondMonomino())
+                            .at(frozenDomino->getColumnOfSecondMonomino())
+                            .assign(BLANK);
+                    }
 
-    // TODO implement Monominos in the Domino to a 'std::vector' instead of storing each Monomino to separate attribute
-    //  to simplify collision detection and rotation?
-    // hide those Monominos of the Domino that are a part of a full row - partial Domino hiding/deletion
-    for (const auto& frozenDomino : this->frozenDominos) {
-        if (frozenDomino->getRowOfFirstMonomino() == fullRowIndex) {
-            this->playingField
-                .at(frozenDomino->getRowOfFirstMonomino())
-                .at(frozenDomino->getColumnOfFirstMonomino())
-                .assign(BLANK);
+                   return (frozenDomino->getRowOfFirstMonomino() == fullRowIndex) &&
+                          (frozenDomino->getRowOfSecondMonomino() == fullRowIndex);
+               }),
+            this->frozenDominos.end());
 
-            frozenDomino->hideFirstMonomino();
-        }
-
-        if (frozenDomino->getRowOfSecondMonomino() == fullRowIndex) {
-            this->playingField
-                .at(frozenDomino->getRowOfSecondMonomino())
-                .at(frozenDomino->getColumnOfSecondMonomino())
-                .assign(BLANK);
-
-            frozenDomino->hideSecondMonomino();
-        }
-    }
-
-    // push Dominos down
-    for (const auto & frozenDomino : this->frozenDominos) {
-        bool isFirstMonominoAbove = frozenDomino->getRowOfFirstMonomino() < fullRowIndex;
-        bool isFirstMonominoVisible = frozenDomino->isFirstMonominoVisible();
-        bool isFirstMonominoAboveAndVisible = isFirstMonominoAbove && isFirstMonominoVisible;
-        if (isFirstMonominoAboveAndVisible) {
-            this->playingField
+        // TODO implement Monominos in the Domino to a 'std::vector' instead of storing Monominos in separate attributes
+        //  to simplify collision detection and rotation?
+        // hide those Monominos of the Domino that are a part of a full row - partial Domino hiding/deletion
+        for (const auto& frozenDomino: this->frozenDominos) {
+            if (frozenDomino->getRowOfFirstMonomino() == fullRowIndex) {
+                this->playingField
                     .at(frozenDomino->getRowOfFirstMonomino())
                     .at(frozenDomino->getColumnOfFirstMonomino())
                     .assign(BLANK);
 
-            frozenDomino->moveFirstMonominoDown();
-        }
+                frozenDomino->hideFirstMonomino();
+            }
 
-        bool isSecondMonominoAbove = frozenDomino->getRowOfSecondMonomino() < fullRowIndex;
-        bool isSecondMonominoVisible = frozenDomino->isSecondMonominoVisible();
-        bool isSecondMonominoAboveAndVisible = isSecondMonominoAbove && isSecondMonominoVisible;
-        if (isSecondMonominoAboveAndVisible) {
-            this->playingField
+            if (frozenDomino->getRowOfSecondMonomino() == fullRowIndex) {
+                this->playingField
                     .at(frozenDomino->getRowOfSecondMonomino())
                     .at(frozenDomino->getColumnOfSecondMonomino())
                     .assign(BLANK);
 
-            frozenDomino->moveSecondMonominoDown();
+                frozenDomino->hideSecondMonomino();
+            }
         }
+
+
+        // push Dominos down
+        for (const auto& frozenDomino: this->frozenDominos) {
+            bool isFirstMonominoAbove = frozenDomino->getRowOfFirstMonomino() < fullRowIndex;
+            bool isFirstMonominoVisible = frozenDomino->isFirstMonominoVisible();
+            bool isFirstMonominoAboveAndVisible = isFirstMonominoAbove && isFirstMonominoVisible;
+            if (isFirstMonominoAboveAndVisible) {
+                this->playingField
+                    .at(frozenDomino->getRowOfFirstMonomino())
+                    .at(frozenDomino->getColumnOfFirstMonomino())
+                    .assign(BLANK);
+
+//                for (int numberOfDownMovements = 0; numberOfDownMovements < numberOfFullRows; ++numberOfDownMovements) {
+                    frozenDomino->moveFirstMonominoDown();
+//                }
+            }
+
+            bool isSecondMonominoAbove = frozenDomino->getRowOfSecondMonomino() < fullRowIndex;
+            bool isSecondMonominoVisible = frozenDomino->isSecondMonominoVisible();
+            bool isSecondMonominoAboveAndVisible = isSecondMonominoAbove && isSecondMonominoVisible;
+            if (isSecondMonominoAboveAndVisible) {
+                this->playingField
+                    .at(frozenDomino->getRowOfSecondMonomino())
+                    .at(frozenDomino->getColumnOfSecondMonomino())
+                    .assign(BLANK);
+
+//                for (int numberOfDownMovements = 0; numberOfDownMovements < numberOfFullRows; ++numberOfDownMovements) {
+                    frozenDomino->moveSecondMonominoDown();
+//                }
+            }
+        }
+
+        ++numberOfRemovedFullRows;
     }
 }
 
@@ -456,7 +416,7 @@ uint_fast32_t ConstructionSite::bottomRowIndexOfUsablePlayingArea() const {
     return this->rows - 2;
 }
 
-bool ConstructionSite::isRowFull(std::vector<std::string>& row) const {
+bool ConstructionSite::isRowFull(const std::vector<std::string>& row) const {
     for (   uint_fast32_t column = this->leftColumnIndexOfUsablePlayingArea();
             column <= this->rightColumnIndexOfUsablePlayingArea();
             ++column)
@@ -468,6 +428,18 @@ bool ConstructionSite::isRowFull(std::vector<std::string>& row) const {
         }
     }
     return true;
+}
+
+std::stack<uint_fast32_t> ConstructionSite::findFullRows() const {
+    std::stack<uint_fast32_t> fullRows;
+    for (uint_fast32_t rowInUsablePlayingArea = 0; rowInUsablePlayingArea <= this->bottomRowIndexOfUsablePlayingArea(); ++rowInUsablePlayingArea) {
+        const bool isRowFull = this->isRowFull(this->playingField.at(rowInUsablePlayingArea) );
+
+        if (isRowFull) {
+            fullRows.push(rowInUsablePlayingArea);
+        }
+    }
+    return fullRows;
 }
 
 //void ConstructionSite::moveActiveMonominoLeft() {
