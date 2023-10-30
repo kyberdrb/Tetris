@@ -34,6 +34,10 @@ void Monomino::moveDown() {
     this->row += 1;
 }
 
+int_fast32_t Monomino::lookUp() const {
+    return this->row - 1;
+}
+
 void Monomino::moveUp() {
     this->row -= 1;
 }

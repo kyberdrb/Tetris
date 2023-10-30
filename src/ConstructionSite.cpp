@@ -256,15 +256,100 @@ void ConstructionSite::moveActiveDominoDown() {
     this->createNewActiveDomino();
 }
 
+// Rotate domino by the pivot - the first monomino
+//  only when the position is free.
+//  Continue with the next available rotation.
+//
+// f: first monomino - the pivot
+// s: second monomino
+//
+//         s
+// fs f sf f
+//    s
 void ConstructionSite::rotateActiveDominoCounterclockwise() {
-    // TODO check boundary conditions before any rotation
-    // Clear previous position of second monomino
+    // Naïve/Simplified implementation
     this->playingField
             .at(this->activeDomino->getRowOfSecondMonomino())
             .at(this->activeDomino->getColumnOfSecondMonomino())
             .assign(BLANK);
 
     this->activeDomino->rotateClockwise();
+
+    // TODO check boundary conditions before any rotation
+    // TODO remember last rotation and continue to the next rotation clockwise - use std::deque?
+    std::string signAtTargetRotation{};
+    // 0->270
+    signAtTargetRotation = playingField.at(this->activeDomino->lookBelowSecondMonomino() ).at(this->activeDomino->lookLeft() );
+//    if (signAtTargetRotation == BLANK) {
+//        // Clear previous position of second monomino
+//        this->playingField
+//                .at(this->activeDomino->getRowOfSecondMonomino())
+//                .at(this->activeDomino->getColumnOfSecondMonomino())
+//                .assign(BLANK);
+//
+//        this->activeDomino->rotateClockwise();
+//        return;
+//    }
+
+    // 270->180
+    if (this->activeDomino->lookUp() >= 0) {
+        signAtTargetRotation = playingField.at(this->activeDomino->lookUp()).at(this->activeDomino->lookLeft() );
+//        if (signAtTargetRotation == BLANK) {
+//            // Clear previous position of second monomino
+//            this->playingField
+//                .at(this->activeDomino->getRowOfSecondMonomino())
+//                .at(this->activeDomino->getColumnOfSecondMonomino())
+//                .assign(BLANK);
+//
+//            this->activeDomino->rotateClockwise();
+//            return;
+//        }
+    }
+
+    // 180->90
+    if (this->activeDomino->lookUp() >= 0) {
+        signAtTargetRotation = playingField.at(this->activeDomino->lookUp()).at(this->activeDomino->lookRight() );
+//        if (signAtTargetRotation == BLANK) {
+//            // Clear previous position of second monomino
+//            this->playingField
+//                .at(this->activeDomino->getRowOfSecondMonomino())
+//                .at(this->activeDomino->getColumnOfSecondMonomino())
+//                .assign(BLANK);
+//
+//            this->activeDomino->rotateClockwise();
+//            return;
+//        }
+    }
+
+    // 90->0
+    signAtTargetRotation = playingField.at(this->activeDomino->lookBelowSecondMonomino()).at(this->activeDomino->lookRight() );
+//    if (signAtTargetRotation == BLANK) {
+//        // Clear previous position of second monomino
+//        this->playingField
+//            .at(this->activeDomino->getRowOfSecondMonomino())
+//            .at(this->activeDomino->getColumnOfSecondMonomino())
+//            .assign(BLANK);
+//
+//        this->activeDomino->rotateClockwise();
+//    }
+
+//    if (this->activeDomino->isInZeroDegreeRotation() ) {
+//        if (signAtTargetPosition == BLANK) {
+//            this->playingField
+//                .at(this->activeDomino->getRowOfSecondMonomino())
+//                .at(this->activeDomino->getColumnOfSecondMonomino())
+//                .assign(BLANK);
+//
+//            this->activeDomino->rotateTo90Degree();
+//            return
+//        }
+//    }
+
+//    auto possibleRotations = this->activeDomino->lookAroundFirstMonomino();
+//    if (possibleRotations.empty() ) {
+//        return;
+//    }
+//    this->activeDomino->nextClockwiseRotationPosition();
 }
 
 //void ConstructionSite::freezeActiveMonomino() {

@@ -1,5 +1,21 @@
 = Tetris
 
+== Quick start
+
+. Build the binary
+
+    /usr/bin/cmake --build /home/laptop/git/kyberdrb/Tetris/cmake-build-debug --target Tetris -j 1
+
+. Run the game
+    * on Linux
+
+        ./Tetris
+
+    * on Windows
+
+        ./Tetris.exe
+
+== Design
 . ConstructionSite (stavenisko - hracia plocha)
 . BuildingBlock / `Polyomino`
     * multiple Bricks/Monominos together in various shapes
@@ -108,7 +124,7 @@
 
 . Monomino has fallen to the bottom OR Monomino has fallen onto another Monomino (two bricks/monominos are on top of each other) - the (active/moving/falling) brick stops moving (deactivates/freezes) and next brick is created, appears and starts falling
 
-* Every Polyomino will have the ability to `rotate` itself (clockwise?), `flip horizontally` - horizontal symmetry, `flip vertically` - vertical symmetry
+* Every Polyomino will have the ability to `rotate` itself (clockwise/counterclockwise), `flip horizontally` - horizontal symmetry, `flip vertically` - vertical symmetry
 
 == Commands for moving `Tetris` directory from one repo to a separate repo
 
