@@ -31,15 +31,17 @@ public:
 //    void moveActiveMonominoRight();
     void moveActiveDominoRight();
 
-    void rotateActiveDominoCounterclockwise();
+    void rotateActiveDominoClockwise();
 
 //    void freezeActiveMonomino();
     void freezeActiveDomino();
 //    void createNewActiveMonomino();
     void createNewActiveDomino();
 
+    void updateOrthogonallyAdjacentPositionsForFirstMonominoInDomino();
+
 private:
-    // TODO change to signed type 'int_fast32_t' for safely iterating downwards in a loop
+    // TODO change to signed type 'int_fast32_t' ? for safely iterating downwards in a loop
     uint_fast32_t rows;
     uint_fast32_t columns;
 

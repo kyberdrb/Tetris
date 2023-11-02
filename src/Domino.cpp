@@ -73,8 +73,10 @@ void Domino::moveSecondMonominoDown() {
 }
 
 int_fast32_t Domino::lookLeft() const {
-    // TODO consider the position of each monomino, e.g. after move or rotation
-    return this->firstMonomino->lookLeft();
+    if (this->firstMonomino->getColumn() < this->secondMonomino->getColumn() ) {
+        return this->firstMonomino->lookLeft();
+    }
+    return this->secondMonomino->lookLeft();
 }
 
 void Domino::moveLeft() {
@@ -83,7 +85,9 @@ void Domino::moveLeft() {
 }
 
 int_fast32_t Domino::lookRight() const {
-    // TODO consider the position of each monomino, e.g. after move or rotation
+    if (this->firstMonomino->getColumn() > this->secondMonomino->getColumn() ) {
+        return this->firstMonomino->lookRight();
+    }
     return this->secondMonomino->lookRight();
 }
 
@@ -96,96 +100,105 @@ int_fast32_t Domino::lookUp() const {
     return this->secondMonomino->lookUp();
 }
 
-// Rotate domino by the pivot - the first monomino
-// f: first monomino - the pivot
-// s: second monomino
-//
-//         s
-// fs f sf f
-//    s
-//
-// ##            -> # (2, 4)
-// (2, 4) (2, 5)    # (3, 4)    second monomino: move down, move left
-//
-// # (2, 4) -> ## (2, 4) (2, 5) second monomino: move right, move up
-// # (3, 4)
+bool Domino::isVertical() const {
+    return this->firstMonomino->getColumn() == this->secondMonomino->getColumn();
+}
+
 void Domino::rotateClockwise() {
-    // TODO implement full clockwise rotation pattern
-    // Naïve/Simplified implementation
-    bool isDominoInHorizontalPosition = this->firstMonomino->getRow() == this->secondMonomino->getRow();
-    if (isDominoInHorizontalPosition) {
-        // first monomino (pivot) =         (2, 4)
-        // second monomino =                (2, 5)
-        // second monomino (desired) =      (3, 4)
-        this->secondMonomino->moveDown(); // 3, 5
-        this->secondMonomino->moveLeft(); // 3, 4
-        return;
+    auto rotationCoordinatesForSecondMonomino = this->freeOrthogonalNeighboursForFirstMonomino.front();
+
+    auto targetRowOfSecondMonomino = rotationCoordinatesForSecondMonomino.first;
+    if (targetRowOfSecondMonomino < this->secondMonomino->getRow() ) {
+        auto numberOfNeededUpMoves = this->secondMonomino->getRow() - targetRowOfSecondMonomino;
+        for (int moveCount = 0; moveCount < numberOfNeededUpMoves; ++moveCount) {
+            this->secondMonomino->moveUp();
+        }
+    }
+    if (targetRowOfSecondMonomino > this->secondMonomino->getRow() ) {
+        auto numberOfNeededDownMoves = targetRowOfSecondMonomino - this->secondMonomino->getRow();
+        for (int moveCount = 0; moveCount < numberOfNeededDownMoves; ++moveCount) {
+            this->secondMonomino->moveDown();
+        }
     }
 
-    this->secondMonomino->moveUp();
-    this->secondMonomino->moveRight();
+    auto targetColumnOfSecondMonomino = rotationCoordinatesForSecondMonomino.second;
+    if (targetColumnOfSecondMonomino < this->secondMonomino->getColumn() ) {
+        auto numberOfNeededLeftMoves = this->secondMonomino->getColumn() - targetColumnOfSecondMonomino;
+        for (int moveCount = 0; moveCount < numberOfNeededLeftMoves; ++moveCount) {
+            this->secondMonomino->moveLeft();
+        }
+    }
+    if (targetColumnOfSecondMonomino > this->secondMonomino->getColumn() ) {
+        auto numberOfNeededRightMoves = targetColumnOfSecondMonomino - this->secondMonomino->getColumn();
+        for (int moveCount = 0; moveCount < numberOfNeededRightMoves; ++moveCount) {
+            this->secondMonomino->moveRight();
+        }
+    }
 
-    // 0 -> 270
-    // fs -> f
-    //       s
-    bool isDominoInZeroDegreePosition =
-        (this->firstMonomino->getRow() == this->secondMonomino->getRow() ) &&
-        (this->firstMonomino->getColumn() < this->secondMonomino->getColumn() );
-//    if (isDominoInZeroDegreePosition) {
-//    this->secondMonomino->moveDown(); // 3, 5
-//    this->secondMonomino->moveLeft(); // 3, 4
-//    return;
-//}
+    this->freeOrthogonalNeighboursForFirstMonomino.pop_front();
+    this->freeOrthogonalNeighboursForFirstMonomino.push_back(rotationCoordinatesForSecondMonomino);
+}
 
-    // 270 -> 180
-    // f -> sf
-    // s
-    bool isDominoIn270DegreePosition =
-        (this->firstMonomino->getColumn() == this->secondMonomino->getColumn() ) &&
-        (this->firstMonomino->getRow() > this->secondMonomino->getRow() );
-//    if (isDominoIn270DegreePosition) {
-//        this->secondMonomino->moveUp();
-//        this->secondMonomino->moveLeft();
-//        return;
-//    }
+void Domino::clearOrthogonallyAdjacentNeighboursToFirstMonomino() {
+    this->freeOrthogonalNeighboursForFirstMonomino.clear();
+}
 
-    // 180 -> 90
-    // sf -> s
-    //       f
-    bool isDominoIn180DegreePosition =
-        (this->firstMonomino->getRow() == this->secondMonomino->getRow() ) &&
-        (this->firstMonomino->getColumn() > this->secondMonomino->getColumn() );
-//    if (isDominoIn180DegreePosition) {
-//        this->secondMonomino->moveUp();
-//        this->secondMonomino->moveRight();
-//        return;
-//    }
-
-    // domino is in vertical position
-    // current (version 1: simplified): 270 -> 0
-    // desired: 90 -> 0
-    // s -> fs
-    // f
-    bool isDominoIn90DegreePosition =
-        (this->firstMonomino->getRow() < this->secondMonomino->getRow() ) &&
-        (this->firstMonomino->getColumn() == this->secondMonomino->getColumn() );
-//    if (isDominoIn90DegreePosition) {
-//        this->secondMonomino->moveDown();
-//        this->secondMonomino->moveRight();
-//        return;
-//    }
+void Domino::addRotationCoordinate(std::pair<int_fast32_t, int_fast32_t> coordinates) {
+    this->freeOrthogonalNeighboursForFirstMonomino.push_front(coordinates);
 }
 
 std::vector<std::pair<int_fast32_t, int_fast32_t>> Domino::lookAroundFirstMonomino() const {
     std::vector<std::pair<int_fast32_t, int_fast32_t>> orthogonalNeighbours;
     orthogonalNeighbours.reserve(4);
-    orthogonalNeighbours.emplace_back(std::make_pair<int_fast32_t, int_fast32_t>(this->firstMonomino->lookBelow(), this->firstMonomino->getColumn() ) );
-    orthogonalNeighbours.emplace_back(std::make_pair<int_fast32_t, int_fast32_t>(this->firstMonomino->getRow(), this->firstMonomino->lookLeft() ) );
-    orthogonalNeighbours.emplace_back(std::make_pair<int_fast32_t, int_fast32_t>(this->firstMonomino->lookUp(), this->firstMonomino->getColumn() ) );
     orthogonalNeighbours.emplace_back(std::make_pair<int_fast32_t, int_fast32_t>(this->firstMonomino->getRow(), this->firstMonomino->lookRight() ) );
+    orthogonalNeighbours.emplace_back(std::make_pair<int_fast32_t, int_fast32_t>(this->firstMonomino->lookUp(), this->firstMonomino->getColumn() ) );
+    orthogonalNeighbours.emplace_back(std::make_pair<int_fast32_t, int_fast32_t>(this->firstMonomino->getRow(), this->firstMonomino->lookLeft() ) );
+    orthogonalNeighbours.emplace_back(std::make_pair<int_fast32_t, int_fast32_t>(this->firstMonomino->lookBelow(), this->firstMonomino->getColumn() ) );
     return orthogonalNeighbours;
 }
 
-bool Domino::isVertical() const {
-    return this->firstMonomino->getColumn() == this->secondMonomino->getColumn();
+void Domino::adjustRotationCoordinatesOrderByCurrentOrientation() {
+    // Current -> Desired next clockwise orientation
+    // 270 -> 180
+    //  f  -> sf
+    //  s
+    bool isDominoIn270DegreeOrientation =
+        (this->firstMonomino->getRow() < this->secondMonomino->getRow() ) &&
+        (this->firstMonomino->getColumn() == this->secondMonomino->getColumn() );
+    if (isDominoIn270DegreeOrientation) {
+        moveFrontOrthogonalNeighbourToBack();
+        return;
+    }
+
+    // 180 -> 90
+    // sf  -> s
+    //        f
+    bool isDominoIn180DegreeOrientation =
+        (this->firstMonomino->getRow() == this->secondMonomino->getRow() ) &&
+        (this->firstMonomino->getColumn() > this->secondMonomino->getColumn() );
+    if (isDominoIn180DegreeOrientation) {
+        for (int i = 0; i < 2; ++i) {
+            moveFrontOrthogonalNeighbourToBack();
+        }
+        return;
+    }
+
+    // 90 -> 0
+    // s  -> fs
+    // f
+    bool isDominoIn90DegreeOrientation =
+        (this->firstMonomino->getRow() > this->secondMonomino->getRow() ) &&
+        (this->firstMonomino->getColumn() == this->secondMonomino->getColumn() );
+    if (isDominoIn90DegreeOrientation) {
+        for (int i = 0; i < 3; ++i) {
+            moveFrontOrthogonalNeighbourToBack();
+        }
+        return;
+    }
+}
+
+void Domino::moveFrontOrthogonalNeighbourToBack() {
+    auto frontElement = this->freeOrthogonalNeighboursForFirstMonomino.front();
+    this->freeOrthogonalNeighboursForFirstMonomino.pop_front();
+    this->freeOrthogonalNeighboursForFirstMonomino.push_back(frontElement);
 }

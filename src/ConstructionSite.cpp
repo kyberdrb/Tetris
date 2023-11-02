@@ -20,16 +20,18 @@ const std::string BRICK = "#";  // HASHTAG/POUNDSIGN
 // TODO manually enlarge the playingField in order to test multiple descends and/or input commands - preparation for testing in a while loop
 ConstructionSite::ConstructionSite(uint_fast32_t rows, uint_fast32_t columns) :
         rows(rows),
-        columns(columns),
+        columns(columns)
+//        ,
         // TODO calculate middle Y-coordinate (horizontal center) for Monomino + adjust constructor for that matter for Monomino class
 //        activeMonomino(std::make_unique<Monomino>() )
-        activeDomino(std::make_unique<Domino>() )
+//        activeDomino(std::make_unique<Domino>() )
 {
     // TODO adjustPlaygroundDimensions()
     //  - check if at least one brick_1 fits in the playground: rows is greater or equal than 3; columns are greater or equal than 3 in 5x6 playing field
 
     reserveCapacity();
     initializePlayingFieldBoundaries();
+    createNewActiveDomino();
 }
 
 void ConstructionSite::reserveCapacity() {
@@ -248,108 +250,42 @@ void ConstructionSite::moveActiveDominoDown() {
             .assign(BLANK);
 
         this->activeDomino->moveDown();
+        updateOrthogonallyAdjacentPositionsForFirstMonominoInDomino();
         return;
     }
 
-    this->freezeActiveDomino();
-    this->removeLastLineOfDominosWhenFull();
-    this->createNewActiveDomino();
+    freezeActiveDomino();
+    removeLastLineOfDominosWhenFull();
+    createNewActiveDomino();
 }
 
-// Rotate domino by the pivot - the first monomino
-//  only when the position is free.
-//  Continue with the next available rotation.
-//
-// f: first monomino - the pivot
-// s: second monomino
-//
-//         s
-// fs f sf f
-//    s
-void ConstructionSite::rotateActiveDominoCounterclockwise() {
-    // Naïve/Simplified implementation
+void ConstructionSite::rotateActiveDominoClockwise() {
     this->playingField
-            .at(this->activeDomino->getRowOfSecondMonomino())
-            .at(this->activeDomino->getColumnOfSecondMonomino())
-            .assign(BLANK);
+        .at(this->activeDomino->getRowOfSecondMonomino())
+        .at(this->activeDomino->getColumnOfSecondMonomino())
+        .assign(BLANK);
 
     this->activeDomino->rotateClockwise();
+}
 
-    // TODO check boundary conditions before any rotation
-    // TODO remember last rotation and continue to the next rotation clockwise - use std::deque?
-    std::string signAtTargetRotation{};
-    // 0->270
-    signAtTargetRotation = playingField.at(this->activeDomino->lookBelowSecondMonomino() ).at(this->activeDomino->lookLeft() );
-//    if (signAtTargetRotation == BLANK) {
-//        // Clear previous position of second monomino
-//        this->playingField
-//                .at(this->activeDomino->getRowOfSecondMonomino())
-//                .at(this->activeDomino->getColumnOfSecondMonomino())
-//                .assign(BLANK);
-//
-//        this->activeDomino->rotateClockwise();
-//        return;
-//    }
-
-    // 270->180
-    if (this->activeDomino->lookUp() >= 0) {
-        signAtTargetRotation = playingField.at(this->activeDomino->lookUp()).at(this->activeDomino->lookLeft() );
-//        if (signAtTargetRotation == BLANK) {
-//            // Clear previous position of second monomino
-//            this->playingField
-//                .at(this->activeDomino->getRowOfSecondMonomino())
-//                .at(this->activeDomino->getColumnOfSecondMonomino())
-//                .assign(BLANK);
-//
-//            this->activeDomino->rotateClockwise();
-//            return;
-//        }
+void ConstructionSite::updateOrthogonallyAdjacentPositionsForFirstMonominoInDomino() {
+    this->activeDomino->clearOrthogonallyAdjacentNeighboursToFirstMonomino();
+    auto possibleRotations = this->activeDomino->lookAroundFirstMonomino();
+    for (const auto& possibleRotationCoordinates : possibleRotations) {
+        int_fast32_t targetRowIndex = possibleRotationCoordinates.first;
+        int_fast32_t topRowIndex = 0;
+        if (targetRowIndex >= topRowIndex) {
+            std::string signAtTargetRotationCoordinates =
+                this->playingField
+                    .at(possibleRotationCoordinates.first)
+                    .at(possibleRotationCoordinates.second);
+            if (signAtTargetRotationCoordinates == BLANK) {
+                this->activeDomino->addRotationCoordinate(possibleRotationCoordinates);
+            }
+        }
     }
 
-    // 180->90
-    if (this->activeDomino->lookUp() >= 0) {
-        signAtTargetRotation = playingField.at(this->activeDomino->lookUp()).at(this->activeDomino->lookRight() );
-//        if (signAtTargetRotation == BLANK) {
-//            // Clear previous position of second monomino
-//            this->playingField
-//                .at(this->activeDomino->getRowOfSecondMonomino())
-//                .at(this->activeDomino->getColumnOfSecondMonomino())
-//                .assign(BLANK);
-//
-//            this->activeDomino->rotateClockwise();
-//            return;
-//        }
-    }
-
-    // 90->0
-    signAtTargetRotation = playingField.at(this->activeDomino->lookBelowSecondMonomino()).at(this->activeDomino->lookRight() );
-//    if (signAtTargetRotation == BLANK) {
-//        // Clear previous position of second monomino
-//        this->playingField
-//            .at(this->activeDomino->getRowOfSecondMonomino())
-//            .at(this->activeDomino->getColumnOfSecondMonomino())
-//            .assign(BLANK);
-//
-//        this->activeDomino->rotateClockwise();
-//    }
-
-//    if (this->activeDomino->isInZeroDegreeRotation() ) {
-//        if (signAtTargetPosition == BLANK) {
-//            this->playingField
-//                .at(this->activeDomino->getRowOfSecondMonomino())
-//                .at(this->activeDomino->getColumnOfSecondMonomino())
-//                .assign(BLANK);
-//
-//            this->activeDomino->rotateTo90Degree();
-//            return
-//        }
-//    }
-
-//    auto possibleRotations = this->activeDomino->lookAroundFirstMonomino();
-//    if (possibleRotations.empty() ) {
-//        return;
-//    }
-//    this->activeDomino->nextClockwiseRotationPosition();
+    this->activeDomino->adjustRotationCoordinatesOrderByCurrentOrientation();
 }
 
 //void ConstructionSite::freezeActiveMonomino() {
@@ -366,6 +302,7 @@ void ConstructionSite::freezeActiveDomino() {
 
 void ConstructionSite::createNewActiveDomino() {
     this->activeDomino = std::make_unique<Domino>();
+    updateOrthogonallyAdjacentPositionsForFirstMonominoInDomino();
 }
 
 //void ConstructionSite::removeLastLineOfMonominosWhenFull() {
@@ -586,6 +523,7 @@ void ConstructionSite::moveActiveDominoLeft() {
             .assign(BLANK);
 
         this->activeDomino->moveLeft();
+        updateOrthogonallyAdjacentPositionsForFirstMonominoInDomino();
     }
 }
 
@@ -610,6 +548,12 @@ void ConstructionSite::moveActiveDominoRight() {
         (this->activeDomino->getColumnOfFirstMonomino() < this->rightColumnIndexOfUsablePlayingArea() ) ||
         (this->activeDomino->getColumnOfSecondMonomino() < this->rightColumnIndexOfUsablePlayingArea() );
 
+    if (this->activeDomino->isVertical() ) {
+        hasDistanceFromRightWall =
+            (this->activeDomino->getColumnOfFirstMonomino() < this->rightColumnIndexOfUsablePlayingArea() ) &&
+            (this->activeDomino->getColumnOfSecondMonomino() < this->rightColumnIndexOfUsablePlayingArea() );
+    }
+
     bool hasFreeSpaceOnRightSide =
         (this->playingField
              .at(this->activeDomino->getRowOfFirstMonomino())
@@ -618,6 +562,17 @@ void ConstructionSite::moveActiveDominoRight() {
         (this->playingField
             .at(this->activeDomino->getRowOfSecondMonomino())
             .at(this->activeDomino->lookRight()) == BLANK);
+
+    if (this->activeDomino->isVertical() ) {
+        hasFreeSpaceOnRightSide =
+            (this->playingField
+                 .at(this->activeDomino->getRowOfFirstMonomino())
+                 .at(this->activeDomino->lookRight()) == BLANK)
+            &&
+            (this->playingField
+                 .at(this->activeDomino->getRowOfSecondMonomino())
+                 .at(this->activeDomino->lookRight()) == BLANK);
+    }
 
     if (hasDistanceFromRightWall && hasFreeSpaceOnRightSide) {
         this->playingField
@@ -631,6 +586,7 @@ void ConstructionSite::moveActiveDominoRight() {
                 .assign(BLANK);
 
         this->activeDomino->moveRight();
+        updateOrthogonallyAdjacentPositionsForFirstMonominoInDomino();
     }
 }
 

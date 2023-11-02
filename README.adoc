@@ -126,9 +126,178 @@
 
 * Every Polyomino will have the ability to `rotate` itself (clockwise/counterclockwise), `flip horizontally` - horizontal symmetry, `flip vertically` - vertical symmetry
 
+== Domino clockwise rotation
+
+Basic rotation
+
+[source]
+----
+Rotate domino by the pivot - the first monomino
+f: first monomino - the pivot
+s: second monomino
+
+Rotation/Orientation
+0 -> 90 -> 180 -> 270
+                   s
+fs -> f -> sf  ->  f
+      s
+
+##            -> # (2, 4)
+(2, 4) (2, 5)    # (3, 4)    second monomino: move down, move left
+
+# (2, 4) -> ## (2, 4) (2, 5) second monomino: move right, move up
+# (3, 4)
+----
+
+Full rotation
+
+[source]
+----
+Recalculation of coordinates and their order for 'freeOrthogonalNeighboursForFirstMonomino'
+Domino: lookAroundFirstMonomino()
+    Domino full coords:  under, left,  above,   right
+| fs | (0, 2), (0, 3): (1, 2), (0, 1), (-1, 2), (0, 3)
+|    |                                 ^^^^^^
+|    |                                 removed because row index is out of bounds
+|    |
+``````
+
+Domino: rotateClockwise()
+    Domino full coords: 1st clockwise option from current position for second monomino; 2nd rotation position for second monomino; 3rd rotation position; current position of Monomino
+| fs | (0, 2), (0, 3): (1, 2), (0, 1), (0, 3)
+|    |                 ^^^^^^
+|    |                 next clockwise rotation coordinate are applied for second monomino and moved to the end
+|    |
+``````
+Domino: rotateClockwise()
+| f  | (0, 2), (1, 2): (0, 1), (0, 3), (1, 2)
+| s  |                 ^^^^^^
+|    |                 next clockwise rotation coordinate are applied for second monomino and moved to the end
+|    |
+``````
+Domino: rotateClockwise()
+|sf  | (0, 2), (0, 1): (0, 3), (1, 2), (0, 1)
+|    |                 ^^^^^^
+|    |                 next clockwise rotation coordinate are applied for second monomino and moved to the end
+|    |
+``````
+Domino: rotateClockwise()
+| fs | (0, 2), (0, 3): (1, 2), (0, 1), (0, 3)
+|    |
+|    |
+|    |
+``````
+Domino: moveLeft()
+    Domino: lookAroundFirstMonomino()
+    Domino full coords:  under, left,  above,   right
+      (0, 1), (0, 2):  (1, 1), (0, 0), (-1, 1), (0, 2)
+                               ^^^^^^   ^^^^^< removed; row index out of bounds
+                               removed: playing field boundary / non-blank sign
+
+      freeOrthogonalNeighbours: (1, 1), (0, 2)
+
+|fs  | (0, 1), (0, 2): (1, 1), (0, 2)
+|    |                 ^^^^^^
+|    |                 next clockwise rotation coordinate are applied for second monomino and moved to the end
+|    |
+``````
+
+Domino: rotateClockwise()
+|f   | (0, 1), (1, 1): (0, 2), (1, 1)
+|s   |                 ^^^^^^
+|    |                 next clockwise rotation coordinate are applied for second monomino and moved to the end
+|    |
+``````
+
+Domino: rotateClockwise()
+|fs  | (0, 1), (0, 2): (1, 1), (0, 2)
+|    |
+|    |
+|    |
+``````
+
+Domino: moveDown()
+    Domino: lookAroundFirstMonomino()
+    Domino full coords:  under, left,  above,   right
+      (1, 1), (1, 2):  (2, 1), (1, 0), (0, 1), (1, 2)
+                               ^^^^^^
+                               removed: playing field boundary / non-blank sign
+
+      freeOrthogonalNeighbours: (2, 1), (0, 1), (1, 2) - maybe some adjustment is needed
+
+|    |
+|fs  | (1, 1), (1, 2): (2, 1), (0, 1), (1, 2)
+|    |                 ^^^^^^
+|    |                 next clockwise rotation coordinate are applied for second monomino and moved to the end
+``````
+
+Domino: rotateClockwise()
+
+|    |
+|f   | (1, 1), (2, 1): (0, 1), (1, 2), (2, 1)
+|s   |                 ^^^^^^
+|    |                 next clockwise rotation coordinate are applied for second monomino and moved to the end
+``````
+
+Domino: rotateClockwise()
+
+|s   |
+|f   | (1, 1), (0, 1): (1, 2), (2, 1), (0, 1)
+|    |                 ^^^^^^
+|    |                 next clockwise rotation coordinate are applied for second monomino and moved to the end
+``````
+
+Domino: rotateClockwise()
+
+|    |
+|fs  | (1, 1), (1, 2): (2, 1), (0, 1), (1, 2)
+|    |                 ^^^^^^
+|    |                 next clockwise rotation coordinate are applied for second monomino and moved to the end
+``````
+
+Domino: moveRight()
+    Domino: lookAroundFirstMonomino()
+    Domino full coords:  under, left,  above,   right
+      (1, 2), (1, 3):  (2, 2), (1, 1), (0, 2), (1, 3)
+
+      freeOrthogonalNeighbours: (2, 2), (1, 1), (0, 2), (1, 3)
+
+|    |
+| fs | (1, 2), (1, 3): (2, 2), (1, 1), (0, 2), (1, 3)
+|    |                 ^^^^^^
+|    |                 next clockwise rotation coordinate are applied for second monomino and moved to the end
+``````
+
+Domino: rotateClockwise()
+
+|    |
+| f  | (1, 2), (2, 2): (1, 1), (0, 2), (1, 3), (2, 2)
+| s  |                 ^^^^^^
+|    |                 next clockwise rotation coordinate are applied for second monomino and moved to the end
+``````
+
+Domino: moveRight()
+    Domino: lookAroundFirstMonomino()
+    Domino full coords:  under, left,  above,   right
+      (1, 3), (2, 3):  (2, 3), (1, 1), (0, 3), (1, 4)
+
+      freeOrthogonalNeighbours: (2, 3), (1, 1), (0, 3), (1, 4)
+
+    Domino: adjust coordinate order for clockwise rotation by current Domino orientation
+      current Domino orientation: 270 degrees
+      freeOrthogonalNeighbours: (1, 1), (0, 3), (1, 4), (2, 3) - move front element to the back one time
+
+|    |
+|  f | (1, 3), (2, 3): (1, 1), (0, 3), (1, 4), (2, 3)
+|  s |
+|    |
+``````
+----
+
 == Commands for moving `Tetris` directory from one repo to a separate repo
 
-```
+[source]
+----
 for each commit related to Tetris directory
 do
 
@@ -152,7 +321,7 @@ isBrickActive -> isActiveBrickActive
 git add --all
 git commit -m "some commit message"
 git push
-```
+----
 
 * https://duckduckgo.com/?q=git+show+origin&t=ffab&ia=web
 * https://duckduckgo.com/?t=ffab&q=git+unfetch&ia=web&iax=qa
