@@ -327,6 +327,21 @@ git push
 * https://duckduckgo.com/?t=ffab&q=git+unfetch&ia=web&iax=qa
 * https://duckduckgo.com/?t=ffab&q=git+head+is+detached+at&ia=web&iax=qa
 
+== TODOs
+
+- clockwise rotacia Domina
+    ** urobit clockwise otacanie vo vsetkych dostupnych smeroch; nedostupne smery preskocit/vymazat: - OK
+    ** zoznam suradnic pre vsetky ortogonalne pozicie dostat do ConstructionSite z Domina cez navratovu hodnotu ako temporary vector - OK
+    ** rozdelit skenovanie (a este neimplementovany order adjustment) pre adjacentNeighbours v Domine, KTORE bude skenovane po posunuti/vytvoreni Domina, OD clockwise rotacie Domina a rotacie suradnic - OK
+    ** zoznam dostupnych suradnic pre rotaciu bude ulozeny ako atribut v Domine, a bude sa aktualizovať (zmaze sa a znova sa naplni aktualnymi suradnicami) po každom pohybe a po vytvorení (alebo skor zviditelneni?) z ContstructionSite podla toho, ci nejake frozen monomino nestoji v ceste, resp ci je pozicia na cielovych suradniciach volna (BLANK); suradnicu, ktora je obsadena frozen Dominom, preskocit/ignorovat; zoznam bude vzdy obsahovať aspon sucasnu poziciu Domina (na zaciatku ako posledny prvok); zoznam bude ulozeny ako deque; po kazdej rotacii sa zoznam suradnic zrotuje, t.j. prva suradnica sa presunie na koniec - OK
+    ** po implememtacii clockwise rotacie upravit v ConstructionSite boundary checky pre pohyb Domina vlavo/vpravo/dole, lebo logika pre pohyb sa spolieha na predpoklad ze pri horizontalnom Domine su monomina v poradi - OK
+    ** pred commitom: precistit kod, otestovat vsetky rotacie, pphyb a blokacie o ine Domino alebo playing field boundary pri rotovanom domine - OK
+
+- Tetris: to be implemented
+    ** counterclockwise rotation
+    ** horizontal flip
+    ** vertical flip
+
 == Sources
 
 * Tetris general
